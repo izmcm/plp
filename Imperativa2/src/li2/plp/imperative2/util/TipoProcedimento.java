@@ -37,6 +37,14 @@ public class TipoProcedimento implements Tipo {
 		return false;
 	}
 
+	public boolean eBigFraction() {
+		return false;
+	}
+	
+	public boolean eBigInt() {
+		return false;
+	}
+
 	public boolean eValido() {
 		boolean retorno = true;
 		for (Tipo tipo : tiposParametrosFormais) {

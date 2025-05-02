@@ -54,6 +54,7 @@ public class Programa {
 	public boolean checaTipo(AmbienteCompilacaoImperativa ambiente)
 			throws IdentificadorJaDeclaradoException,
 			IdentificadorNaoDeclaradoException, EntradaVaziaException {
+		System.err.println("checaTipo:" + comando);
 		return comando.checaTipo(ambiente);
 	}
 

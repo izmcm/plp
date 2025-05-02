@@ -220,7 +220,9 @@ public class MultiInterpretador {
 
 		messageBoard.setText("sintaxe verificada com sucesso!\n");
 		li2.plp.imperative1.memory.ListaValor entrada = obterListaEntradaImp2(entradaStr);
-		if (prog.checaTipo(new li2.plp.imperative1.memory.ContextoCompilacaoImperativa(entrada))) {
+		boolean tiposValidos = prog.checaTipo(new li2.plp.imperative1.memory.ContextoCompilacaoImperativa(entrada));
+		System.out.println("Tipos válidos? " + tiposValidos);
+		if (tiposValidos) {
 			messageBoard.append("resultado = "
 					+ prog.executar(new li2.plp.imperative2.memory.ContextoExecucaoImperativa2(entrada))
 							.toString());
@@ -314,10 +316,11 @@ public class MultiInterpretador {
 		List valores = new LinkedList<li2.plp.expressions2.expression.ValorConcreto>();
 		li2.plp.imperative1.memory.ListaValor entrada = new li2.plp.imperative1.memory.ListaValor();
 		StringTokenizer parser = new StringTokenizer(texto);
-
+	
 		while (parser.hasMoreTokens()) {
 			String parametro = parser.nextToken();
-			
+			System.err.println("parametro: " + parametro);
+			System.err.println("parametro str: " + parametro.toString());
 			try {
 				Integer inteiro = Integer.valueOf(parametro);
 				valores.add(new li1.plp.expressions2.expression.ValorInteiro(inteiro.intValue()));

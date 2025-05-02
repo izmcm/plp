@@ -1,5 +1,6 @@
 package li2.plp.imperative1.command;
 
+import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions2.expression.Expressao;
 import li2.plp.expressions2.expression.Id;
 import li2.plp.expressions2.memory.VariavelJaDeclaradaException;
@@ -50,8 +51,24 @@ public class Atribuicao implements Comando {
 	 */
 	public boolean checaTipo(AmbienteCompilacaoImperativa ambiente)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		return expressao.checaTipo(ambiente)
-				&& id.getTipo(ambiente).eIgual(expressao.getTipo(ambiente));
+		System.out.println("Verificando tipos em Atribuicao...");
+		System.out.println("Expressao: " + expressao);
+
+		boolean expressaoValida = expressao.checaTipo(ambiente);
+		System.out.println("Expressao válida? " + expressaoValida);
+		System.out.println("Id: " + id);
+
+		Tipo tipoId = id.getTipo(ambiente);
+		System.out.println("Tipo do id: " + tipoId);
+		Tipo tipoExpressao = expressao.getTipo(ambiente);
+		System.out.println("Tipo da expressao: " + tipoExpressao);
+		System.out.println("Comparando tipos...");
+		boolean tiposIguais = tipoId.eIgual(tipoExpressao);
+		System.out.println("Tipos iguais? " + tiposIguais);
+		
+		boolean resposta = expressaoValida && tiposIguais;
+		System.out.println("Resultado final de checaTipo em Atribuicao: " + resposta);
+		return resposta;
 	}
 
 }

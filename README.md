@@ -1,4 +1,5 @@
 # Paradigmas de Linguagens Computacionais
+Repositório Original: https://github.com/fmca/PLP
 
 - [Paradigmas de Linguagens Computacionais](#paradigmas-de-linguagens-computacionais)
   - [Equipe](#equipe)

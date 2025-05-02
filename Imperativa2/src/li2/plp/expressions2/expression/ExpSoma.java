@@ -26,10 +26,39 @@ public class ExpSoma extends ExpBinaria {
 	/**
 	 * Retorna o valor da Expressao de Soma
 	 */
+	@Override
 	public Valor avaliar(AmbienteExecucao amb) throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
+		Valor valorEsq = getEsq().avaliar(amb);
+		Valor valorDir = getDir().avaliar(amb);
+	
+		System.out.println("valorEsq: " + valorEsq);
+		System.out.println("valorDir: " + valorDir);
+
+		// Caso ambos sejam BigFraction ou um deles seja BigFraction
+		// if (valorEsq instanceof ValorBigFraction || valorDir instanceof ValorBigFraction) {
+		// 	ValorBigFraction bigFractionEsq = valorEsq instanceof ValorBigFraction
+		// 			? (ValorBigFraction) valorEsq
+		// 			: new ValorBigFraction(((ValorInteiro) valorEsq).valor());
+		// 	ValorBigFraction bigFractionDir = valorDir instanceof ValorBigFraction
+		// 			? (ValorBigFraction) valorDir
+		// 			: new ValorBigFraction(((ValorInteiro) valorDir).valor());
+		// 	return new ValorBigFraction(bigFractionEsq.valor().add(bigFractionDir.valor()));
+		// }
+	
+		// Caso ambos sejam BigInt ou um deles seja BigInt
+		if (valorEsq instanceof ValorBigInt || valorDir instanceof ValorBigInt) {
+			ValorBigInt bigIntEsq = valorEsq instanceof ValorBigInt
+					? (ValorBigInt) valorEsq
+					: (ValorBigInt) valorEsq.toBigInt();
+			ValorBigInt bigIntDir = valorDir instanceof ValorBigInt
+					? (ValorBigInt) valorDir
+					: (ValorBigInt) valorDir.toBigInt() ;
+			return bigIntDir.add(bigIntEsq);
+		}
+	
+		// Caso ambos sejam Inteiros
 		return new ValorInteiro(
-			((ValorInteiro) getEsq().avaliar(amb)).valor() +
-			((ValorInteiro) getDir().avaliar(amb)).valor() );
+				((ValorInteiro) valorEsq).valor() + ((ValorInteiro) valorDir).valor());
 	}
 	
 	/**
@@ -43,9 +72,21 @@ public class ExpSoma extends ExpBinaria {
 	 * @exception VariavelNaoDeclaradaException se existir um identificador
 	 *          declarado mais de uma vez no mesmo bloco do ambiente.
 	 */
+	@Override
 	protected boolean checaTipoElementoTerminal(AmbienteCompilacao ambiente)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		return (getEsq().getTipo(ambiente).eInteiro() && getDir().getTipo(ambiente).eInteiro());
+		System.out.println("checaTipoElementoTerminal in ExpSoma");
+		Tipo tipoEsq = getEsq().getTipo(ambiente);
+		Tipo tipoDir = getDir().getTipo(ambiente);
+	
+		System.out.println("Tipo do operando esquerdo: " + tipoEsq);
+		System.out.println("Tipo do operando direito: " + tipoDir);
+	
+		boolean tipoEsqValido = tipoEsq.eBigFraction() || tipoEsq.eBigInt() || tipoEsq.eInteiro();
+		boolean tipoDirValido = tipoDir.eBigFraction() || tipoDir.eBigInt() || tipoDir.eInteiro();
+
+		System.out.println("checaTipoElementoTerminal retorno: " + (tipoEsqValido && tipoDirValido));
+		return tipoEsqValido && tipoDirValido;
 	}
 
 	/**
@@ -54,8 +95,28 @@ public class ExpSoma extends ExpBinaria {
 	 * @param ambiente o ambiente de compila��o.
 	 * @return os tipos possiveis desta expressao.
 	 */
+	@Override
 	public Tipo getTipo(AmbienteCompilacao ambiente) {
-		return TipoPrimitivo.INTEIRO;
+		System.out.println("getTipo in ExpSoma");
+		Tipo tipoEsq = getEsq().getTipo(ambiente);
+		Tipo tipoDir = getDir().getTipo(ambiente);
+
+		System.out.println("Tipo do operando esquerdo: " + tipoEsq);
+		System.out.println("Tipo do operando direito: " + tipoDir);
+	
+		if (tipoEsq.eIgual(tipoDir)) {
+			return tipoEsq;
+		}
+	
+		if (tipoEsq.eBigFraction() || tipoDir.eBigFraction()) {
+			return TipoPrimitivo.BIGFRACTION;
+		}
+
+		if (tipoEsq.eBigInt() || tipoDir.eBigInt()) {
+			return TipoPrimitivo.BIGINT;
+		}
+
+		throw new RuntimeException("Tipos incompatíveis na soma: " + tipoEsq + " e " + tipoDir);
 	}
 	
 	@Override

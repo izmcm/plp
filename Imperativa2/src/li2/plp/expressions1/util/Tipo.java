@@ -37,6 +37,22 @@ public interface Tipo {
 	public abstract boolean eString();
 
 	/**
+	 * Indica se esta expressao &eacute; BigFraction.
+	 * 
+	 * @return <code>true</code> se esta expressao for BigFraction;
+	 *         <code>false</code> caso contrario.
+	 */
+	public abstract boolean eBigFraction();
+
+		/**
+	 * Indica se esta expressao &eacute; BigInt.
+	 * 
+	 * @return <code>true</code> se esta expressao for BigInt;
+	 *         <code>false</code> caso contrario.
+	 */
+	public abstract boolean eBigInt();
+
+	/**
 	 * Compara este tipo com o tipo dado.
 	 * Dois tipos s�o iguais se eles t�m o mesmo nome.
 	 * 

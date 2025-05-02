@@ -38,20 +38,37 @@ public class DeclaracaoProcedimento extends Declaracao {
 	public boolean checaTipo(AmbienteCompilacaoImperativa ambiente)
 			throws IdentificadorJaDeclaradoException,
 			IdentificadorNaoDeclaradoException, EntradaVaziaException {
-		boolean resposta;
+		System.err.println("Verificando tipos em DeclaracaoProcedimento...");
+		System.err.println("ID do procedimento: " + id);
+		System.err.println("Tipo do procedimento: " + defProcedimento.getTipo());
 
 		ambiente.map(id, defProcedimento.getTipo());
 
-		ListaDeclaracaoParametro parametrosFormais = getDefProcedimento()
-				.getParametrosFormais();
-		if (parametrosFormais.checaTipo(ambiente)) {
+		ListaDeclaracaoParametro parametrosFormais = getDefProcedimento().getParametrosFormais();
+		System.err.println("Parâmetros formais: " + parametrosFormais);
+
+		boolean parametrosValidos = parametrosFormais.checaTipo(ambiente);
+		System.err.println("Parâmetros válidos? " + parametrosValidos);
+
+		boolean resposta;
+		if (parametrosValidos) {
 			ambiente.incrementa();
 			ambiente = parametrosFormais.elabora(ambiente);
-			resposta = getDefProcedimento().getComando().checaTipo(ambiente);
+
+			System.err.println("Verificando comando do procedimento...");
+			boolean comandoValido = getDefProcedimento().getComando().checaTipo(ambiente);
+			System.err.println("Comando: " + getDefProcedimento().getComando());
+			System.err.println("Procedimento: " + getDefProcedimento());
+
+			System.err.println("DeclaracaoProcedimento - Comando válido? " + comandoValido);
+
+			resposta = comandoValido;
 			ambiente.restaura();
 		} else {
 			resposta = false;
 		}
+
+		System.err.println("Resultado final de checaTipo em DeclaracaoProcedimento: " + resposta);
 		return resposta;
 	}
 

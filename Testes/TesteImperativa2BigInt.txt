@@ -1,9 +1,9 @@
 { 
-   var a  =  0 ,
+   var a  = bigint:0 ,
    proc incA ()  {
-     a := a + 1
+     a := a + bigint:1
    };
    call incA();
    call incA();
-   write(a);
+   write(a)
 }

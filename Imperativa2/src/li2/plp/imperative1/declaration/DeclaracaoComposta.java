@@ -29,7 +29,17 @@ public class DeclaracaoComposta extends Declaracao {
 	public boolean checaTipo(AmbienteCompilacaoImperativa ambiente)
 			throws IdentificadorJaDeclaradoException,
 			IdentificadorNaoDeclaradoException, EntradaVaziaException {
-		return declaracao1.checaTipo(ambiente)
-				&& declaracao2.checaTipo(ambiente);
+		System.err.println("Verificando tipos em DeclaracaoComposta...");
+		System.err.println("Declaracao 1: " + declaracao1);
+		boolean declaracao1Valida = declaracao1.checaTipo(ambiente);
+		System.err.println("Declaracao 1 válida? " + declaracao1Valida);
+
+		System.err.println("Declaracao 2: " + declaracao2);
+		boolean declaracao2Valida = declaracao2.checaTipo(ambiente);
+		System.err.println("Declaracao 2 válida? " + declaracao2Valida);
+
+		boolean resultado = declaracao1Valida && declaracao2Valida;
+		System.err.println("Resultado final de checaTipo em DeclaracaoComposta: " + resultado);
+		return resultado;
 	}
 }

@@ -139,11 +139,16 @@ TOKEN : /* TOKENS DOS POSS�VEIS TIPOS */
   < INT : "int" >
 | < BOOLEAN  : "boolean" >
 | < STRING  : "string" >
-
+| < BIGINT : "BigInt" >
+| < BIGFRACTION : "BigFraction" >
 }
 
 TOKEN : /* LITERALS */
 {
+  < BIGINT_LITERAL : "bigint:" (["0"-"9"])+ >
+|
+  < BIGFRACTION_LITERAL : "bigfrac:" (["0"-"9"])+ "/" (["0"-"9"])+ >
+|
   < INTEGER_LITERAL:
         <DECIMAL_LITERAL> (["l","L"])?
       | <HEX_LITERAL> (["l","L"])?
@@ -408,6 +413,65 @@ Valor PValorInteiro() :
 	}
 }
 
+Valor PValorBigInt() :
+{
+    Token token;
+}
+{
+    token = <BIGINT_LITERAL>
+    {
+        String tokenValue = token.toString().substring(7).trim();
+		List<Integer> digits = new ArrayList<Integer>();
+		for (char c : tokenValue.toCharArray()) {
+			if (Character.isDigit(c)) {
+				digits.add(c - '0');
+			} else {
+				throw new ParseException("Valor deve conter apenas dígitos.");
+			}
+		}
+        return new ValorBigInt(digits);
+    }
+}
+
+Valor PValorBigFraction() :
+{
+    Token token;
+}
+{
+    token = <BIGFRACTION_LITERAL>
+    {
+        String tokenValue = token.toString().substring(8).trim();
+        String[] parts = tokenValue.split("/"); 
+
+        if (parts.length != 2) {
+            throw new ParseException("ValorBigFraction deve conter exatamente um numerador e um denominador separados por '/'.");
+        }
+
+		List<Integer> firstNumber = new ArrayList<Integer>();
+		for (char c : parts[0].toCharArray()) {
+			if (Character.isDigit(c)) {
+				firstNumber.add(c - '0');
+			} else {
+				throw new ParseException("Valor deve conter apenas dígitos.");
+			}
+		}
+
+		List<Integer> secondNumber = new ArrayList<Integer>();
+		for (char c : parts[1].toCharArray()) {
+			if (Character.isDigit(c)) {
+				secondNumber.add(c - '0');
+			} else {
+				throw new ParseException("Valor deve conter apenas dígitos.");
+			}
+		}
+
+        List<ValorBigInt> fraction = new ArrayList<ValorBigInt>();
+        fraction.add(new ValorBigInt(firstNumber)); 
+        fraction.add(new ValorBigInt(secondNumber));
+        return new ValorBigFraction(fraction);
+    }
+}
+
 Valor PValorBooleano() :
 {
 }
@@ -438,6 +502,8 @@ Valor PValor() :
       	  retorno = PValorInteiro() 
 		| retorno = PValorBooleano()
 		| retorno = PValorString()
+		| retorno = PValorBigInt()
+    	| retorno = PValorBigFraction()
     )
 	
 	{
@@ -483,14 +549,16 @@ Expressao PExpPrimaria() :
     Expressao retorno;
 }
 {
-	(  
-	    retorno = PId()
-	  | retorno = PValor() 
-	  | <LPAREN> retorno = PExpressao() <RPAREN>
-	)
-	{
-		return retorno; 
-	}
+    (  
+        retorno = PValor()
+      | 
+        retorno = PId()
+      | 
+        <LPAREN> retorno = PExpressao() <RPAREN>
+    )
+    {
+        return retorno; 
+    }
 }
 
 
@@ -754,7 +822,9 @@ Tipo PTipo():
 	(
 	<INT> {tipo = TipoPrimitivo.INTEIRO;} |
 	<BOOLEAN> {tipo = TipoPrimitivo.BOOLEANO;} |
-	<STRING> {tipo = TipoPrimitivo.STRING;}
+    <STRING> {tipo = TipoPrimitivo.STRING;} |
+    <BIGINT> {tipo = TipoPrimitivo.BIGINT;} |
+    <BIGFRACTION> {tipo = TipoPrimitivo.BIGFRACTION;}
 	)
 	{
 		return tipo;

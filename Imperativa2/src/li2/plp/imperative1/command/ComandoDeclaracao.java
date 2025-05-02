@@ -23,11 +23,11 @@ public class ComandoDeclaracao implements Comando {
 	 * Declara a(s) vari�vel(is) e executa o comando.
 	 * 
 	 * @param ambiente
-	 *            o ambiente que contem o mapeamento entre identificadores e
-	 *            valores.
+	 *                 o ambiente que contem o mapeamento entre identificadores e
+	 *                 valores.
 	 * 
 	 * @return o ambiente modificado pela execu��o da declara��o e do comando.
-	 * @throws ErroTipoEntradaException 
+	 * @throws ErroTipoEntradaException
 	 * 
 	 */
 	public AmbienteExecucaoImperativa executar(
@@ -49,9 +49,20 @@ public class ComandoDeclaracao implements Comando {
 			IdentificadorNaoDeclaradoException, EntradaVaziaException {
 		boolean resposta;
 		ambiente.incrementa();
-		resposta = declaracao.checaTipo(ambiente)
-				&& comando.checaTipo(ambiente);
+		System.err.println("Verificando tipos em ComandoDeclaracao...");
+		System.err.println("Declaracao: " + declaracao);
+		System.err.println("Comando: " + comando);
+
+		boolean declaracaoValida = declaracao.checaTipo(ambiente);
+		System.err.println("Declaracao válida? " + declaracaoValida);
+
+		boolean comandoValido = comando.checaTipo(ambiente);
+		System.err.println("ComandoDeclaracao - Comando válido? " + comandoValido);
+
+		resposta = declaracaoValida && comandoValido;
+
 		ambiente.restaura();
+		System.err.println("Resultado final de checaTipo em ComandoDeclaracao: " + resposta);
 		return resposta;
 	}
 
