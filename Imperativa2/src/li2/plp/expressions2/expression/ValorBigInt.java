@@ -31,12 +31,6 @@ public class ValorBigInt extends ValorConcreto<List<Integer>> {
         return new ValorBigInt(new ArrayList<>(this.valor()));
     }
 
-    /**
-     * Soma dois valores ValorBigInt.
-     * 
-     * @param outro O outro ValorBigInt a ser somado.
-     * @return Um novo ValorBigInt representando o resultado da soma.
-     */
     public ValorBigInt add(ValorBigInt outro) {
         List<Integer> resultado = new ArrayList<>();
         List<Integer> valor1 = this.valor();
@@ -62,6 +56,42 @@ public class ValorBigInt extends ValorConcreto<List<Integer>> {
         }
 
         Collections.reverse(resultado);
+
+        return new ValorBigInt(resultado);
+    }
+
+    public ValorBigInt multiply(ValorBigInt outro) {
+        List<Integer> resultado = new ArrayList<>();
+        List<Integer> valor1 = new ArrayList<>(this.valor());
+        List<Integer> valor2 = new ArrayList<>(outro.valor());
+
+        Collections.reverse(valor1);
+        Collections.reverse(valor2);
+
+        int[] produto = new int[valor1.size() + valor2.size()];
+
+        for (int i = 0; i < valor1.size(); i++) {
+            for (int j = 0; j < valor2.size(); j++) {
+                produto[i + j] += valor1.get(i) * valor2.get(j);
+                if (produto[i + j] >= 10) {
+                    produto[i + j + 1] += produto[i + j] / 10;
+                    produto[i + j] %= 10;
+                }
+            }
+        }
+
+        boolean leadingZero = true;
+        for (int i = produto.length - 1; i >= 0; i--) {
+            if (produto[i] == 0 && leadingZero) {
+                continue;
+            }
+            leadingZero = false;
+            resultado.add(produto[i]);
+        }
+
+        if (resultado.isEmpty()) {
+            resultado.add(0);
+        }
 
         return new ValorBigInt(resultado);
     }

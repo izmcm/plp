@@ -19,8 +19,8 @@ public class ValorBigFraction extends ValorConcreto<List<ValorBigInt>> {
     }
 
     public Tipo getTipo(AmbienteCompilacao amb) {
-		return TipoPrimitivo.BIGFRACTION;
-	}
+        return TipoPrimitivo.BIGFRACTION;
+    }
 
     @Override
     public String toString() {
@@ -30,5 +30,20 @@ public class ValorBigFraction extends ValorConcreto<List<ValorBigInt>> {
     @Override
     public ValorBigFraction clone() {
         return new ValorBigFraction(this.valor());
+    }
+
+    // TODO: simplificar a fração
+    public ValorBigFraction add(ValorBigFraction outro) {
+        ValorBigInt numerador1 = this.valor().get(0);
+        ValorBigInt denominador1 = this.valor().get(1);
+
+        ValorBigInt numerador2 = outro.valor().get(0);
+        ValorBigInt denominador2 = outro.valor().get(1);
+
+        ValorBigInt novoNumerador1 = numerador1.multiply(denominador2);
+        ValorBigInt novoNumerador2 = numerador2.multiply(denominador1);
+        ValorBigInt novoDenominador = denominador1.multiply(denominador2);
+
+        return new ValorBigFraction(List.of(novoNumerador1.add(novoNumerador2), novoDenominador));
     }
 }

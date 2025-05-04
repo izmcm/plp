@@ -77,6 +77,7 @@ public enum TipoPrimitivo implements Tipo {
 				if(this.nome.equals(tipo.getNome())) return true;
 				System.out.println("TipoPrimitivo.eIgual: " + this.nome + " == " + tipo.getNome() + "?");
 
+				// Os tipos INTEIRO, BIGINT e BIGFRACTION sao equivalentes
 				if(
 					(this.nome.equals("INTEIRO") || this.nome.equals("BIGINT") || this.nome.equals("BIGFRACTION")) &&
 					(tipo.getNome().equals("INTEIRO") || tipo.getNome().equals("BIGINT") || tipo.getNome().equals("BIGFRACTION"))

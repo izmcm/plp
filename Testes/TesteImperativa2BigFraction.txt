@@ -1,0 +1,8 @@
+{ 
+   var a  = bigfrac:1/2,
+   proc incA ()  {
+     a := a + bigfrac:3/4
+   };
+   call incA();
+   write(a)
+}

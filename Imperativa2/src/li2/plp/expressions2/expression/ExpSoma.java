@@ -35,15 +35,15 @@ public class ExpSoma extends ExpBinaria {
 		System.out.println("valorDir: " + valorDir);
 
 		// Caso ambos sejam BigFraction ou um deles seja BigFraction
-		// if (valorEsq instanceof ValorBigFraction || valorDir instanceof ValorBigFraction) {
-		// 	ValorBigFraction bigFractionEsq = valorEsq instanceof ValorBigFraction
-		// 			? (ValorBigFraction) valorEsq
-		// 			: new ValorBigFraction(((ValorInteiro) valorEsq).valor());
-		// 	ValorBigFraction bigFractionDir = valorDir instanceof ValorBigFraction
-		// 			? (ValorBigFraction) valorDir
-		// 			: new ValorBigFraction(((ValorInteiro) valorDir).valor());
-		// 	return new ValorBigFraction(bigFractionEsq.valor().add(bigFractionDir.valor()));
-		// }
+		if (valorEsq instanceof ValorBigFraction || valorDir instanceof ValorBigFraction) {
+			ValorBigFraction bigFractionEsq = valorEsq instanceof ValorBigFraction
+					? (ValorBigFraction) valorEsq
+					: valorEsq.toBigFraction();
+			ValorBigFraction bigFractionDir = valorDir instanceof ValorBigFraction
+					? (ValorBigFraction) valorDir
+					: valorDir.toBigFraction();
+			return bigFractionEsq.add(bigFractionDir);
+		}
 	
 		// Caso ambos sejam BigInt ou um deles seja BigInt
 		if (valorEsq instanceof ValorBigInt || valorDir instanceof ValorBigInt) {

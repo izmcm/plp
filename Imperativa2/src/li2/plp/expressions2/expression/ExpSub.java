@@ -45,9 +45,21 @@ public class ExpSub extends ExpBinaria {
 	 * @exception VariavelNaoDeclaradaException se existir um identificador
 	 *          declarado mais de uma vez no mesmo bloco do ambiente.
 	 */
+	@Override
 	protected boolean checaTipoElementoTerminal(AmbienteCompilacao ambiente)
-			throws VariavelNaoDeclaradaException,VariavelJaDeclaradaException {
-		return (getEsq().getTipo(ambiente).eInteiro() && getDir().getTipo(ambiente).eInteiro());
+			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
+		System.out.println("checaTipoElementoTerminal in ExpSoma");
+		Tipo tipoEsq = getEsq().getTipo(ambiente);
+		Tipo tipoDir = getDir().getTipo(ambiente);
+	
+		System.out.println("Tipo do operando esquerdo: " + tipoEsq);
+		System.out.println("Tipo do operando direito: " + tipoDir);
+	
+		boolean tipoEsqValido = tipoEsq.eBigFraction() || tipoEsq.eBigInt() || tipoEsq.eInteiro();
+		boolean tipoDirValido = tipoDir.eBigFraction() || tipoDir.eBigInt() || tipoDir.eInteiro();
+
+		System.out.println("checaTipoElementoTerminal retorno: " + (tipoEsqValido && tipoDirValido));
+		return tipoEsqValido && tipoDirValido;
 	}
 
 	/**
@@ -56,8 +68,28 @@ public class ExpSub extends ExpBinaria {
 	 * @param ambiente o ambiente de compila��o.
 	 * @return os tipos possiveis desta expressao.
 	 */
+	@Override
 	public Tipo getTipo(AmbienteCompilacao ambiente) {
-		return TipoPrimitivo.INTEIRO;
+		System.out.println("getTipo in ExpSoma");
+		Tipo tipoEsq = getEsq().getTipo(ambiente);
+		Tipo tipoDir = getDir().getTipo(ambiente);
+
+		System.out.println("Tipo do operando esquerdo: " + tipoEsq);
+		System.out.println("Tipo do operando direito: " + tipoDir);
+	
+		if (tipoEsq.eIgual(tipoDir)) {
+			return tipoEsq;
+		}
+	
+		if (tipoEsq.eBigFraction() || tipoDir.eBigFraction()) {
+			return TipoPrimitivo.BIGFRACTION;
+		}
+
+		if (tipoEsq.eBigInt() || tipoDir.eBigInt()) {
+			return TipoPrimitivo.BIGINT;
+		}
+
+		throw new RuntimeException("Tipos incompatíveis na soma: " + tipoEsq + " e " + tipoDir);
 	}
 	
 	@Override
