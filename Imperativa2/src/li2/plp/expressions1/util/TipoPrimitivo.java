@@ -32,10 +32,17 @@ public enum TipoPrimitivo implements Tipo {
 	}
 
 	/* (non-Javadoc)
+	 * @see li2.plp.expressions1.util.Tipo#eNumerico()
+	 */
+	public boolean eNumerico() {
+		return this.eIgual(INTEIRO) || this.eIgual(BIGINT) || this.eIgual(BIGFRACTION);
+	}
+
+	/* (non-Javadoc)
 	 * @see li2.plp.expressions1.util.Tipo#eInteiro()
 	 */
 	public boolean eInteiro() {
-		return this.eIgual(BIGFRACTION) || this.eIgual(INTEIRO) || this.eIgual(BIGINT);
+		return this.eIgual(INTEIRO);
 	}
 
 	/* (non-Javadoc)
@@ -56,14 +63,14 @@ public enum TipoPrimitivo implements Tipo {
 	 * @see li2.plp.expressions1.util.Tipo#eBigInt()
 	 */
 	public boolean eBigInt() {
-		return this.eIgual(BIGFRACTION) || this.eIgual(INTEIRO) || this.eIgual(BIGINT);
+		return this.eIgual(BIGINT);
 	}
 
 	/* (non-Javadoc)
 	 * @see li2.plp.expressions1.util.Tipo#eBigFraction()
 	 */
 	public boolean eBigFraction() {
-		return this.eIgual(BIGFRACTION) || this.eIgual(INTEIRO) || this.eIgual(BIGINT);
+		return this.eIgual(BIGFRACTION);
 	}
 
 	/* (non-Javadoc)
@@ -74,14 +81,8 @@ public enum TipoPrimitivo implements Tipo {
 		boolean ret = false;
 		if (eValido()) {
 			if (tipo.eValido()) {
-				if(this.nome.equals(tipo.getNome())) return true;
 				System.out.println("TipoPrimitivo.eIgual: " + this.nome + " == " + tipo.getNome() + "?");
-
-				// Os tipos INTEIRO, BIGINT e BIGFRACTION sao equivalentes
-				if(
-					(this.nome.equals("INTEIRO") || this.nome.equals("BIGINT") || this.nome.equals("BIGFRACTION")) &&
-					(tipo.getNome().equals("INTEIRO") || tipo.getNome().equals("BIGINT") || tipo.getNome().equals("BIGFRACTION"))
-				) return true;
+				if(this.nome.equals(tipo.getNome())) return true;
 			} else {
 				ret = tipo.eIgual(this);
 			}

@@ -7,14 +7,14 @@ import li2.plp.expressions2.memory.AmbienteExecucao;
 import li2.plp.expressions2.memory.VariavelJaDeclaradaException;
 import li2.plp.expressions2.memory.VariavelNaoDeclaradaException;
 
-public class ExpSub extends ExpBinaria {
-    public ExpSub(Expressao esq, Expressao dir) {
-        super(esq, dir, "-");
+public class ExpMultiplicacao extends ExpBinaria {
+    public ExpMultiplicacao(Expressao esq, Expressao dir) {
+        super(esq, dir, "*");
     }
 
     @Override
     public Valor avaliar(AmbienteExecucao amb) throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-        System.out.println("avaliar in ExpSub");
+        System.out.println("avaliar in expMultiplicacao");
 
         Valor valorEsq = getEsq().avaliar(amb);
         Valor valorDir = getDir().avaliar(amb);
@@ -22,11 +22,12 @@ public class ExpSub extends ExpBinaria {
         System.out.println("valorEsq: " + valorEsq);
         System.out.println("valorDir: " + valorDir);
 
+        // Delegue a multiplicação para ValorNumerico
         if (valorEsq instanceof ValorNumerico && valorDir instanceof ValorNumerico) {
-            return ((ValorNumerico<?>) valorEsq).sub((ValorNumerico<?>) valorDir);
+            return ((ValorNumerico<?>) valorEsq).multiply((ValorNumerico<?>) valorDir);
         }
 
-        throw new UnsupportedOperationException("Operação de subtração não suportada para os tipos fornecidos.");
+        throw new UnsupportedOperationException("Operação de multiplicação não suportada para os tipos fornecidos.");
     }
 
     @Override
@@ -35,7 +36,7 @@ public class ExpSub extends ExpBinaria {
         Tipo tipoEsq = getEsq().getTipo(ambiente);
         Tipo tipoDir = getDir().getTipo(ambiente);
 
-        System.out.println("checaTipoElementoTerminal in ExpSub");
+        System.out.println("checaTipoElementoTerminal in ExpMultiplicacao");
         System.out.println("tipoEsq: " + tipoEsq);
         System.out.println("tipoDir: " + tipoDir);
 
@@ -62,11 +63,11 @@ public class ExpSub extends ExpBinaria {
             return TipoPrimitivo.BIGINT;
         }
 
-        throw new RuntimeException("Tipos incompatíveis na subtração: " + tipoEsq + " e " + tipoDir);
+        throw new RuntimeException("Tipos incompatíveis na multiplicação: " + tipoEsq + " e " + tipoDir);
     }
 
     @Override
     public ExpBinaria clone() {
-        return new ExpSub(esq.clone(), dir.clone());
+        return new ExpMultiplicacao(esq.clone(), dir.clone());
     }
 }

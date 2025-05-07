@@ -8,17 +8,21 @@ import li2.plp.expressions1.util.Tipo;
 import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.expressions2.memory.AmbienteCompilacao;
 
-public class ValorBigInt extends ValorConcreto<List<Integer>> {
+public class ValorBigInt extends ValorNumerico<List<Integer>> {
     public ValorBigInt(List<Integer> valor) {
         super(valor);
     }
 
     @Override
     public String toString() {
+        System.out.println("ValorBigInt this.valor(): " + this.valor());
+
         StringBuilder sb = new StringBuilder();
         for (int digit : this.valor()) {
             sb.append(digit);
         }
+
+        System.out.println("ValorBigInt toString: " + sb.toString());
         return sb.toString();
     }
 
@@ -32,9 +36,14 @@ public class ValorBigInt extends ValorConcreto<List<Integer>> {
     }
 
     public ValorBigInt add(ValorBigInt outro) {
+        System.out.println("bigint Somando " + this + " + " + outro);
+
         List<Integer> resultado = new ArrayList<>();
         List<Integer> valor1 = this.valor();
         List<Integer> valor2 = outro.valor();
+
+        System.out.println("valor1: " + valor1);
+        System.out.println("valor2: " + valor2);
 
         Collections.reverse(valor1);
         Collections.reverse(valor2);
@@ -53,6 +62,50 @@ public class ValorBigInt extends ValorConcreto<List<Integer>> {
 
         if (carry > 0) {
             resultado.add(carry);
+        }
+
+        Collections.reverse(resultado);
+
+        return new ValorBigInt(resultado);
+    }
+
+    public ValorBigInt sub(ValorBigInt outro) {
+        System.out.println("bigint Subtraindo " + this + " - " + outro);
+        List<Integer> resultado = new ArrayList<>();
+        List<Integer> valor1 = new ArrayList<>(this.valor());
+        List<Integer> valor2 = new ArrayList<>(outro.valor());
+
+        System.out.println("valor1: " + valor1);
+        System.out.println("valor2: " + valor2);
+
+        if (valor1.size() < valor2.size() ||
+                (valor1.size() == valor2.size() && valor1.toString().compareTo(valor2.toString()) < 0)) {
+            throw new IllegalArgumentException("Subtração resultaria em um número negativo, o que não é suportado.");
+        }
+
+        Collections.reverse(valor1);
+        Collections.reverse(valor2);
+
+        int borrow = 0;
+
+        for (int i = 0; i < valor1.size(); i++) {
+            int digito1 = valor1.get(i);
+            int digito2 = i < valor2.size() ? valor2.get(i) : 0;
+
+            int subtracao = digito1 - digito2 - borrow;
+
+            if (subtracao < 0) {
+                subtracao += 10;
+                borrow = 1;
+            } else {
+                borrow = 0;
+            }
+
+            resultado.add(subtracao);
+        }
+
+        while (resultado.size() > 1 && resultado.get(resultado.size() - 1) == 0) {
+            resultado.remove(resultado.size() - 1);
         }
 
         Collections.reverse(resultado);
@@ -94,5 +147,9 @@ public class ValorBigInt extends ValorConcreto<List<Integer>> {
         }
 
         return new ValorBigInt(resultado);
+    }
+
+    public ValorBigInt div(ValorBigInt outro) {
+      throw new UnsupportedOperationException("TODO: divisao de bigint nao implementado");
     }
 }

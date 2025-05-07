@@ -8,7 +8,7 @@ import li2.plp.expressions2.memory.AmbienteCompilacao;
 
 // Representa uma fração com numerador e denominador como listas de dígitos
 // Exemplo: 123/456 será representado como [[1, 2, 3], [4, 5, 6]]
-public class ValorBigFraction extends ValorConcreto<List<ValorBigInt>> {
+public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
     public ValorBigFraction(List<ValorBigInt> valor) {
         super(valor);
 
@@ -24,6 +24,7 @@ public class ValorBigFraction extends ValorConcreto<List<ValorBigInt>> {
 
     @Override
     public String toString() {
+        System.out.println("ValorBigFraction this.valor(): " + this.valor());
         return this.valor().get(0).toString() + "/" + this.valor().get(1).toString();
     }
 
@@ -32,8 +33,24 @@ public class ValorBigFraction extends ValorConcreto<List<ValorBigInt>> {
         return new ValorBigFraction(this.valor());
     }
 
+
     // TODO: simplificar a fração
     public ValorBigFraction add(ValorBigFraction outro) {
+        ValorBigInt numerador1 = this.valor().get(0);
+        ValorBigInt denominador1 = this.valor().get(1);
+
+        ValorBigInt numerador2 = outro.valor().get(0);
+        ValorBigInt denominador2 = outro.valor().get(1);
+
+        ValorBigInt novoNumerador1 = (ValorBigInt) numerador1.multiply(denominador2);
+        ValorBigInt novoNumerador2 = (ValorBigInt) numerador2.multiply(denominador1);
+        ValorBigInt novoDenominador = (ValorBigInt) denominador1.multiply(denominador2);
+
+        return new ValorBigFraction(List.of(novoNumerador1.add(novoNumerador2), novoDenominador));
+    }
+
+    // TODO: simplificar a fração
+    public ValorBigFraction sub(ValorBigFraction outro) {
         ValorBigInt numerador1 = this.valor().get(0);
         ValorBigInt denominador1 = this.valor().get(1);
 
@@ -44,6 +61,24 @@ public class ValorBigFraction extends ValorConcreto<List<ValorBigInt>> {
         ValorBigInt novoNumerador2 = numerador2.multiply(denominador1);
         ValorBigInt novoDenominador = denominador1.multiply(denominador2);
 
-        return new ValorBigFraction(List.of(novoNumerador1.add(novoNumerador2), novoDenominador));
+        return new ValorBigFraction(List.of(novoNumerador1.sub(novoNumerador2), novoDenominador));
+    }
+
+    // TODO: simplificar a fração
+    public ValorBigFraction multiply(ValorBigFraction outro) {
+        ValorBigInt numerador1 = this.valor().get(0);
+        ValorBigInt denominador1 = this.valor().get(1);
+
+        ValorBigInt numerador2 = outro.valor().get(0);
+        ValorBigInt denominador2 = outro.valor().get(1);
+
+        ValorBigInt novoNumerador = numerador1.multiply(numerador2);
+        ValorBigInt novoDenominador = denominador1.multiply(denominador2);
+
+        return new ValorBigFraction(List.of(novoNumerador, novoDenominador));
+    }
+
+    public ValorBigFraction div(ValorBigFraction outro) {
+        throw new UnsupportedOperationException("TODO: Divisão de bigfraction não suportada.");
     }
 }

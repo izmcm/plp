@@ -13,6 +13,14 @@ public interface Tipo {
 	public abstract String getNome();
 
 	/**
+	 * Indica se esta expressao &eacute; numerica.
+	 * 
+	 * @return <code>true</code> se esta expressao for numerica;
+	 *         <code>false</code> caso contrario.
+	 */
+	public abstract boolean eNumerico();
+
+	/**
 	 * Indica se esta expressao &eacute; inteira.
 	 * 
 	 * @return <code>true</code> se esta expressao for inteira;

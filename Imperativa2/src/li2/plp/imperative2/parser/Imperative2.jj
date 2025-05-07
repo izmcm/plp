@@ -597,10 +597,26 @@ Expressao PExpBinaria() :
 			retorno = PExpEquals()
 		| LOOKAHEAD (PExpPrimaria() <PLUS>)
 			retorno = PExpSoma()
+		| LOOKAHEAD (PExpPrimaria() <STAR>)
+			retorno = PExpMultiplicacao()
 	)
 	{
 		return retorno;
 	}
+}
+
+ExpMultiplicacao PExpMultiplicacao() :
+{
+    Expressao esq;
+    Expressao dir;
+}
+{
+    esq = PExpPrimaria()
+    <STAR>
+    dir = PExpressao()
+    {
+        return new ExpMultiplicacao(esq, dir);
+    }
 }
 
 ExpSoma PExpSoma() :
@@ -686,7 +702,7 @@ Expressao PExpressao() :
 	(
 	    LOOKAHEAD (2) 
 	  		retorno = PExpUnaria()
-	  | LOOKAHEAD (PExpPrimaria() (<OR> | <AND> | <MINUS> | <PLUS> | <EQ> | <CONCAT>)) 
+	  | LOOKAHEAD (PExpPrimaria() (<OR> | <AND> | <MINUS> | <PLUS> | <EQ> | <CONCAT> | <STAR>)) 
 	  		retorno = PExpBinaria()
 	  |
 	    retorno = PExpPrimaria()

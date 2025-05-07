@@ -7,22 +7,11 @@ import li2.plp.expressions2.memory.AmbienteCompilacao;
 /**
  * Objetos desta classe encapsulam valor inteiro.
  */
-public class ValorInteiro extends ValorConcreto<Integer> {
-
-	/**
-	 * Cria <code>ValorInteiro</code> contendo o valor fornecido.
-	 */
+public class ValorInteiro extends ValorNumerico<Integer> {
 	public ValorInteiro(Integer valor) {
 		super(valor);
 	}
 
-	/**
-	 * Retorna os tipos possiveis desta expressao.
-	 * 
-	 * @param amb
-	 *            o ambiente de compila��o.
-	 * @return os tipos possiveis desta expressao.
-	 */
 	public Tipo getTipo(AmbienteCompilacao amb) {
 		return TipoPrimitivo.INTEIRO;
 	}
@@ -30,4 +19,20 @@ public class ValorInteiro extends ValorConcreto<Integer> {
 	public ValorInteiro clone(){
 		return new ValorInteiro(this.valor());
 	}
+
+    public ValorInteiro add(ValorInteiro outro) {
+        return new ValorInteiro(this.valor() + ((ValorInteiro) outro).valor());
+    }
+
+    public ValorInteiro sub(ValorInteiro outro) {
+        return new ValorInteiro(this.valor() - ((ValorInteiro) outro).valor());
+    }
+
+    public ValorInteiro multiply(ValorInteiro outro) {
+        return new ValorInteiro(this.valor() * ((ValorInteiro) outro).valor());
+    }
+
+    public ValorInteiro div(ValorInteiro outro) {
+        return new ValorInteiro(this.valor() / ((ValorInteiro) outro).valor());
+    }
 }
