@@ -9,21 +9,21 @@ public abstract class ValorNumerico<T> extends ValorConcreto<T> {
         super(valor);
     }
 
-    public ValorNumerico<?> add(ValorNumerico<?> outro) {
+    public ValorNumerico<?> sum(ValorNumerico<?> outro) {
         if (this instanceof ValorBigFraction || outro instanceof ValorBigFraction) {
             ValorBigFraction bigFractionEsq = this.toBigFraction();
             ValorBigFraction bigFractionDir = outro.toBigFraction();
-            return bigFractionEsq.add(bigFractionDir);
+            return bigFractionEsq.sum(bigFractionDir);
         }
 
         if (this instanceof ValorBigInt || outro instanceof ValorBigInt) {
             ValorBigInt bigIntEsq = this.toBigInt();
             ValorBigInt bigIntDir = outro.toBigInt();
-            return bigIntEsq.add(bigIntDir);
+            return bigIntEsq.sum(bigIntDir);
         }
 
         if (this instanceof ValorInteiro && outro instanceof ValorInteiro) {
-            return ((ValorInteiro) this).add((ValorInteiro) outro);
+            return ((ValorInteiro) this).sum((ValorInteiro) outro);
         }
 
         throw new UnsupportedOperationException("Operação de soma não suportada para os tipos fornecidos.");
@@ -93,7 +93,6 @@ public abstract class ValorNumerico<T> extends ValorConcreto<T> {
         System.out.println("toBigInt() called");
         System.out.println("this: " + this);
         if (this instanceof ValorBigInt) {
-            System.out.println("retornando ValorBigInt:" + this.toString());
             return (ValorBigInt) this;
         } else if (this instanceof ValorInteiro) {
             int valorInteiro = ((ValorInteiro) this).valor();
@@ -104,8 +103,6 @@ public abstract class ValorNumerico<T> extends ValorConcreto<T> {
             }
 
             ValorBigInt valorBigInt = new ValorBigInt(listaDigitos);
-            System.out.println("retornando ValorBigInt de inteiro:" + valorBigInt.toString());
-
             return valorBigInt;
         } else {
             throw new UnsupportedOperationException("Não é possível converter " + this.getClass().getSimpleName() + " para ValorBigInt.");

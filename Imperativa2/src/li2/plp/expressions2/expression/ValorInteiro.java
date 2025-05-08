@@ -20,7 +20,7 @@ public class ValorInteiro extends ValorNumerico<Integer> {
 		return new ValorInteiro(this.valor());
 	}
 
-    public ValorInteiro add(ValorInteiro outro) {
+    public ValorInteiro sum(ValorInteiro outro) {
         return new ValorInteiro(this.valor() + ((ValorInteiro) outro).valor());
     }
 

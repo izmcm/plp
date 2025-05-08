@@ -1,38 +1,43 @@
 { 
-   var bigintA = bigint:10 ,
-   var bigintB = bigint:5 ,
-   var bigintC = bigint:2 ,
-   var intD = 3 ,
-   var bigfractionE = bigfrac:1/2,
+	var bigintA = bigint:4 ,
+	var bigintB = bigint:1 ,
+	var bigintC = bigint:2 ,
+	var intD = 3 ,
+	var bigfractionE = bigfrac:8/4,
 	
-   proc soma ()  {
-		 write("bigintA + bigintB:");
-		 write(bigintA + bigintB);
-		 write("bigintA + intD:");
-	   write(bigintA + intD);
-		 write("bigintA + bigfractionE");
-	   write(bigintA + bigfractionE)
-   },
+	proc soma ()  {
+		write("bigintA + bigintB:");
+		write(bigintA + bigintB);
+		write("bigintA + intD:");
+		write(bigintA + intD);
+		write("bigintA + bigfractionE");
+		write(bigintA + bigfractionE)
+	},
 
-   proc mul ()  {
-		 write("bigintA * bigintB:");
-		 write(bigintA * bigintB);
-		 write("bigintA * intD:");
-	   write(bigintA * intD);
-		 write("bigintA * bigfractionE");
-	   write(bigintA * bigfractionE)
-   },
+	proc mul ()  {
+		write("bigintA * bigintB:");
+		write(bigintA * bigintB);
+		write("bigintA * intD:");
+		write(bigintA * intD);
+		write("bigintA * bigfractionE");
+		write(bigintA * bigfractionE)
+	},
 
-   proc sub ()  {
-		 write("bigintA - bigintB:");
-		 write(bigintA - bigintB);
-		 write("bigintA - intD:");
-	   write(bigintA - intD);
-		 write("bigintA - bigfractionE");
-	   write(bigintA - bigfractionE)
-   };
+	proc div ()  {
+		write("bigintA / bigintB:");
+		write(bigintA / bigintB);
+		write("bigintA / intD:");
+		write(bigintA / intD)
+	},
 
-	 call soma();
-   call mul();
-	 call sub()
+	proc sub ()  {
+		write("bigintA - bigintB:");
+		write(bigintA - bigintB);
+		write("bigintA - intD:");
+		write(bigintA - intD);
+		write("bigintA - bigfractionE");
+		write(bigintA - bigfractionE)
+	};
+
+	call sub()
 }

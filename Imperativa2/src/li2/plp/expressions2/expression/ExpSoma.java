@@ -15,7 +15,6 @@ public class ExpSoma extends ExpBinaria {
 
     @Override
     public Valor avaliar(AmbienteExecucao amb) throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-        System.out.println("avaliar in ExpSoma");
 		Valor valorEsq = getEsq().avaliar(amb);
         Valor valorDir = getDir().avaliar(amb);
 
@@ -27,7 +26,7 @@ public class ExpSoma extends ExpBinaria {
 
         // Delegue a soma para ValorNumerico
         if (valorEsq instanceof ValorNumerico && valorDir instanceof ValorNumerico) {
-            return ((ValorNumerico<?>) valorEsq).add((ValorNumerico<?>) valorDir);
+            return ((ValorNumerico<?>) valorEsq).sum((ValorNumerico<?>) valorDir);
         }
 
         throw new UnsupportedOperationException("Operação de soma não suportada para os tipos fornecidos.");

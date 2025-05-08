@@ -1,0 +1,16 @@
+{ 
+	var bigintA = bigint:10 ,
+	var bigintB = bigint:5 ,
+	var bigintC = bigint:2 ,
+	var intD = 3 ,
+	var bigfractionE = bigfrac:1/2,
+
+	proc soma ()  {
+		write("bigintA + bigintB:");
+		write(bigintA + bigintB);
+		write("bigintA + intD:");
+		write(bigintA + intD)
+	};
+
+	call soma()
+}

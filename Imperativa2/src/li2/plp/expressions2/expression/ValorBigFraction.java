@@ -33,23 +33,23 @@ public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
         return new ValorBigFraction(this.valor());
     }
 
-
-    // TODO: simplificar a fração
-    public ValorBigFraction add(ValorBigFraction outro) {
+    public ValorBigFraction sum(ValorBigFraction outro) {
         ValorBigInt numerador1 = this.valor().get(0);
         ValorBigInt denominador1 = this.valor().get(1);
 
         ValorBigInt numerador2 = outro.valor().get(0);
         ValorBigInt denominador2 = outro.valor().get(1);
 
-        ValorBigInt novoNumerador1 = (ValorBigInt) numerador1.multiply(denominador2);
-        ValorBigInt novoNumerador2 = (ValorBigInt) numerador2.multiply(denominador1);
-        ValorBigInt novoDenominador = (ValorBigInt) denominador1.multiply(denominador2);
+        ValorBigInt novoNumerador1 = numerador1.multiply(denominador2);
+        ValorBigInt novoNumerador2 = numerador2.multiply(denominador1);
 
-        return new ValorBigFraction(List.of(novoNumerador1.add(novoNumerador2), novoDenominador));
+        ValorBigInt novoNumerador = novoNumerador1.sum(novoNumerador2);
+        ValorBigInt novoDenominador = denominador1.multiply(denominador2);
+
+        // Simplifica fração
+        return novoNumerador.div(novoDenominador);
     }
 
-    // TODO: simplificar a fração
     public ValorBigFraction sub(ValorBigFraction outro) {
         ValorBigInt numerador1 = this.valor().get(0);
         ValorBigInt denominador1 = this.valor().get(1);
@@ -59,12 +59,14 @@ public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
 
         ValorBigInt novoNumerador1 = numerador1.multiply(denominador2);
         ValorBigInt novoNumerador2 = numerador2.multiply(denominador1);
+
+        ValorBigInt novoNumerador = novoNumerador1.sub(novoNumerador2);
         ValorBigInt novoDenominador = denominador1.multiply(denominador2);
 
-        return new ValorBigFraction(List.of(novoNumerador1.sub(novoNumerador2), novoDenominador));
+        // Simplifica fração
+        return novoNumerador.div(novoDenominador);
     }
 
-    // TODO: simplificar a fração
     public ValorBigFraction multiply(ValorBigFraction outro) {
         ValorBigInt numerador1 = this.valor().get(0);
         ValorBigInt denominador1 = this.valor().get(1);
@@ -75,7 +77,8 @@ public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
         ValorBigInt novoNumerador = numerador1.multiply(numerador2);
         ValorBigInt novoDenominador = denominador1.multiply(denominador2);
 
-        return new ValorBigFraction(List.of(novoNumerador, novoDenominador));
+        // Simplifica fração
+        return novoNumerador.div(novoDenominador);
     }
 
     public ValorBigFraction div(ValorBigFraction outro) {

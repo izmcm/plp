@@ -7,9 +7,9 @@ import li2.plp.expressions2.memory.AmbienteExecucao;
 import li2.plp.expressions2.memory.VariavelJaDeclaradaException;
 import li2.plp.expressions2.memory.VariavelNaoDeclaradaException;
 
-public class ExpMultiplicacao extends ExpBinaria {
-    public ExpMultiplicacao(Expressao esq, Expressao dir) {
-        super(esq, dir, "*");
+public class ExpDivisao extends ExpBinaria {
+    public ExpDivisao(Expressao esq, Expressao dir) {
+        super(esq, dir, "/");
     }
 
     @Override
@@ -22,7 +22,7 @@ public class ExpMultiplicacao extends ExpBinaria {
 
         // Delegue a multiplicação para ValorNumerico
         if (valorEsq instanceof ValorNumerico && valorDir instanceof ValorNumerico) {
-            return ((ValorNumerico<?>) valorEsq).multiply((ValorNumerico<?>) valorDir);
+            return ((ValorNumerico<?>) valorEsq).div((ValorNumerico<?>) valorDir);
         }
 
         throw new UnsupportedOperationException("Operação de multiplicação não suportada para os tipos fornecidos.");
@@ -41,6 +41,7 @@ public class ExpMultiplicacao extends ExpBinaria {
         return tipoEsq.eNumerico() && tipoDir.eNumerico();
     }
 
+    // FIXME: verificar tipos corretos
     @Override
     public Tipo getTipo(AmbienteCompilacao ambiente) {
         Tipo tipoEsq = getEsq().getTipo(ambiente);

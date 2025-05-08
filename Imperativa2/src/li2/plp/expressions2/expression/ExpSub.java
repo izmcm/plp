@@ -14,8 +14,6 @@ public class ExpSub extends ExpBinaria {
 
     @Override
     public Valor avaliar(AmbienteExecucao amb) throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-        System.out.println("avaliar in ExpSub");
-
         Valor valorEsq = getEsq().avaliar(amb);
         Valor valorDir = getDir().avaliar(amb);
 
