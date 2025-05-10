@@ -1,6 +1,6 @@
 { 
-	var bigintA = bigint:4 ,
-	var bigintB = bigint:1 ,
+	var bigintA = bigint:62 ,
+	var bigintB = bigint:12 ,
 	var bigintC = bigint:2 ,
 	var intD = 3 ,
 	var bigfractionE = bigfrac:8/4,
@@ -27,7 +27,9 @@
 		write("bigintA / bigintB:");
 		write(bigintA / bigintB);
 		write("bigintA / intD:");
-		write(bigintA / intD)
+		write(bigintA / intD);
+		write("bigintA / bigfractionE");
+		write(bigintA / bigfractionE)
 	},
 
 	proc sub ()  {
@@ -39,5 +41,8 @@
 		write(bigintA - bigfractionE)
 	};
 
+	call soma();
+	call mul();
+	call div();
 	call sub()
 }

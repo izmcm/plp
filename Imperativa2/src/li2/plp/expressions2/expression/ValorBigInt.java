@@ -1,7 +1,6 @@
 package li2.plp.expressions2.expression;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,43 +37,43 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
     // [2, 3, 1]
     // + [9, 5, 3]
     // -------------
-    // -> 9 + 2 + 0 = 1 (carry = 1 & resultado = [1, 0, 0])
-    // -> 5 + 3 + 1 = 9 (carry = 0 & resultado = [1, 9, 0])
-    // -> 3 + 1 + 0 = 4 (carry = 0 & resultado = [1, 9, 4])
+    // -> 9 + 2 + 0 = 1 (carry = 1 & result = [1, 0, 0])
+    // -> 5 + 3 + 1 = 9 (carry = 0 & result = [1, 9, 0])
+    // -> 3 + 1 + 0 = 4 (carry = 0 & result = [1, 9, 4])
     // 2. Inverter lista
-    // resultado = [4, 9, 1]
-    public ValorBigInt sum(ValorBigInt outro) {
-        System.out.println("[bigint] [sum] " + this + " + " + outro);
+    // result = [4, 9, 1]
+    public ValorBigInt sum(ValorBigInt other) {
+        System.out.println("[bigint] [sum] " + this + " + " + other);
 
-        List<Integer> resultado = new ArrayList<>();
-        List<Integer> valor1 = this.valor();
-        List<Integer> valor2 = outro.valor();
+        List<Integer> result = new ArrayList<>();
+        List<Integer> firstValue = this.valor();
+        List<Integer> secondValue = other.valor();
 
-        System.out.println("valor1: " + valor1);
-        System.out.println("valor2: " + valor2);
+        System.out.println("firstValue: " + firstValue);
+        System.out.println("secondValue: " + secondValue);
 
-        Collections.reverse(valor1);
-        Collections.reverse(valor2);
+        Collections.reverse(firstValue);
+        Collections.reverse(secondValue);
 
         int carry = 0;
-        int maxLength = Math.max(valor1.size(), valor2.size());
+        int maxLength = Math.max(firstValue.size(), secondValue.size());
 
         for (int i = 0; i < maxLength; i++) {
-            int digito1 = i < valor1.size() ? valor1.get(i) : 0;
-            int digito2 = i < valor2.size() ? valor2.get(i) : 0;
+            int firstDigit = i < firstValue.size() ? firstValue.get(i) : 0;
+            int secondDigit = i < secondValue.size() ? secondValue.get(i) : 0;
 
-            int soma = digito1 + digito2 + carry;
-            resultado.add(soma % 10);
-            carry = soma / 10;
+            int sumHelper = firstDigit + secondDigit + carry;
+            result.add(sumHelper % 10);
+            carry = sumHelper / 10;
         }
 
         if (carry > 0) {
-            resultado.add(carry);
+            result.add(carry);
         }
 
-        Collections.reverse(resultado);
+        Collections.reverse(result);
 
-        return new ValorBigInt(resultado);
+        return new ValorBigInt(result);
     }
 
     // [4, 9, 1] - [3, 5, 9]
@@ -83,54 +82,54 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
     // - [9, 5, 3]
     // -------------
     // -> 1 - 9 - 0 = -8
-    // if(<0) 8 + 10 = 2 (borrow = 1 & resultado = [2, 0, 0])
+    // if(<0) 8 + 10 = 2 (borrow = 1 & result = [2, 0, 0])
     // -> 9 - 5 - 1 = 3
-    // if(>0) (borrow = 0 & resultado = [2, 3, 0])
+    // if(>0) (borrow = 0 & result = [2, 3, 0])
     // -> 4 - 3 - 0 = 1
-    // if(>0) (borrow = 0 & resultado = [2, 3, 1])
+    // if(>0) (borrow = 0 & result = [2, 3, 1])
     // 2. Inverter lista
     // 3. Remover zeros à esquerda
-    // resultado = [1, 3, 2]
-    public ValorBigInt sub(ValorBigInt outro) {
-        System.out.println("[bigint] [sub] " + this + " - " + outro);
-        List<Integer> resultado = new ArrayList<>();
-        List<Integer> valor1 = new ArrayList<>(this.valor());
-        List<Integer> valor2 = new ArrayList<>(outro.valor());
+    // result = [1, 3, 2]
+    public ValorBigInt sub(ValorBigInt other) {
+        System.out.println("[bigint] [sub] " + this + " - " + other);
+        List<Integer> result = new ArrayList<>();
+        List<Integer> firstValue = new ArrayList<>(this.valor());
+        List<Integer> secondValue = new ArrayList<>(other.valor());
 
-        System.out.println("valor1: " + valor1);
-        System.out.println("valor2: " + valor2);
+        System.out.println("firstValue: " + firstValue);
+        System.out.println("secondValue: " + secondValue);
 
-        if (valor1.size() < valor2.size() ||
-                (valor1.size() == valor2.size() && valor1.toString().compareTo(valor2.toString()) < 0)) {
+        if (firstValue.size() < secondValue.size() || (firstValue.size() == secondValue.size() &&
+                firstValue.toString().compareTo(secondValue.toString()) < 0)) {
             throw new IllegalArgumentException("Subtração resultaria em um número negativo, o que não é suportado.");
         }
 
-        Collections.reverse(valor1);
-        Collections.reverse(valor2);
+        Collections.reverse(firstValue);
+        Collections.reverse(secondValue);
 
         int borrow = 0;
 
-        for (int i = 0; i < valor1.size(); i++) {
-            int digito1 = valor1.get(i);
-            int digito2 = i < valor2.size() ? valor2.get(i) : 0;
+        for (int i = 0; i < firstValue.size(); i++) {
+            int firstDigit = firstValue.get(i);
+            int secondDigit = i < secondValue.size() ? secondValue.get(i) : 0;
 
-            int subtracao = digito1 - digito2 - borrow;
+            int subtraction = firstDigit - secondDigit - borrow;
 
-            if (subtracao < 0) {
-                subtracao += 10;
+            if (subtraction < 0) {
+                subtraction += 10;
                 borrow = 1;
             } else {
                 borrow = 0;
             }
 
-            resultado.add(subtracao);
+            result.add(subtraction);
         }
 
-        Collections.reverse(resultado);
+        Collections.reverse(result);
 
-        resultado = removeTrailingZeros(resultado);
+        result = removeTrailingZeros(result);
 
-        return new ValorBigInt(resultado);
+        return new ValorBigInt(result);
     }
 
     // [4, 9] * [1, 2]
@@ -138,124 +137,165 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
     // [9, 4]
     // * [2, 1]
     // -------------
-    // produto = [0, 0, 0, 0]
-    // -> Para cada índice em valor1 (i) e valor2 (j), calcular produto[i + j]:
-    // - i = 0, j = 0 -> 9 * 2 = 18 (produto = [8, 1, 0, 0, 0, 0])
-    // - i = 0, j = 1 -> 9 * 1 = 9 (produto = [8, 0, 1, 0, 0, 0])
-    // - i = 1, j = 0 -> 4 * 2 = 8 (produto = [8, 8, 1, 0, 0, 0])
-    // - i = 1, j = 1 -> 4 * 1 = 4 + 1 (produto = [8, 8, 5, 0, 0, 0])
+    // product = [0, 0, 0, 0]
+    // -> Para cada índice em firstValue (i) e secondValue (j), calcular product[i +
+    // j]:
+    // - i = 0, j = 0 -> 9 * 2 = 18 (product = [8, 1, 0, 0, 0, 0])
+    // - i = 0, j = 1 -> 9 * 1 = 9 (product = [8, 0, 1, 0, 0, 0])
+    // - i = 1, j = 0 -> 4 * 2 = 8 (product = [8, 8, 1, 0, 0, 0])
+    // - i = 1, j = 1 -> 4 * 1 = 4 + 1 (product = [8, 8, 5, 0, 0, 0])
     // -------------
-    // produto = [8, 8, 5, 0, 0, 0]
+    // product = [8, 8, 5, 0, 0, 0]
     // 2. Remover zeros à esquerda (se houver)
     // 3. Inverter lista
-    // resultado = [5, 8, 8]
-    public ValorBigInt multiply(ValorBigInt outro) {
-        System.out.println("[bigint] [mul] " + this + " * " + outro);
+    // result = [5, 8, 8]
+    public ValorBigInt multiply(ValorBigInt other) {
+        System.out.println("[bigint] [mul] " + this + " * " + other);
 
-        List<Integer> resultado = new ArrayList<>();
-        List<Integer> valor1 = new ArrayList<>(this.valor());
-        List<Integer> valor2 = new ArrayList<>(outro.valor());
+        List<Integer> result = new ArrayList<>();
+        List<Integer> firstValue = new ArrayList<>(this.valor());
+        List<Integer> secondValue = new ArrayList<>(other.valor());
 
-        Collections.reverse(valor1);
-        Collections.reverse(valor2);
+        Collections.reverse(firstValue);
+        Collections.reverse(secondValue);
 
-        int[] produto = new int[valor1.size() + valor2.size()];
+        int[] product = new int[firstValue.size() + secondValue.size()];
 
-        for (int i = 0; i < valor1.size(); i++) {
-            for (int j = 0; j < valor2.size(); j++) {
-                produto[i + j] += valor1.get(i) * valor2.get(j);
-                produto[i + j + 1] += produto[i + j] / 10;
-                produto[i + j] %= 10;
+        for (int i = 0; i < firstValue.size(); i++) {
+            for (int j = 0; j < secondValue.size(); j++) {
+                product[i + j] += firstValue.get(i) * secondValue.get(j);
+                product[i + j + 1] += product[i + j] / 10;
+                product[i + j] %= 10;
             }
         }
 
         boolean leadingZero = true;
-        for (int i = produto.length - 1; i >= 0; i--) {
-            if (produto[i] == 0 && leadingZero) {
+        for (int i = product.length - 1; i >= 0; i--) {
+            if (product[i] == 0 && leadingZero) {
                 continue;
             }
             leadingZero = false;
-            resultado.add(produto[i]);
+            result.add(product[i]);
         }
 
-        if (resultado.isEmpty()) {
-            resultado.add(0);
+        if (result.isEmpty()) {
+            result.add(0);
         }
 
-        return new ValorBigInt(resultado);
+        return new ValorBigInt(result);
     }
 
-    public ValorBigFraction div(ValorBigInt outro) {
-        System.out.println("[bigint] [div] " + this + " / " + outro);
+    // [6, 0] / [1, 2]
+    // 1. Checa se divisor é zero
+    // 2. Checa se divisor é maior que dividendo
+    // -----------
+    // this = [6, 0]
+    // other = [1, 2]
+    //
+    // remaider = [6, 0]
+    // while (remaider >= other) [6, 0] >= [1, 2]?
+    // -> [6, 0] - [1, 2] = [4, 8] | quocient = 1
+    // -> [4, 8] >= [1, 2]?
+    // -> [4, 8] - [1, 2] = [3, 6] | quocient = 2
+    // -> [3, 6] >= [1, 2]?
+    // -> [3, 6] - [1, 2] = [2, 4] | quocient = 3
+    // -> [2, 4] >= [1, 2]?
+    // -> [2, 4] - [1, 2] = [1, 2] | quocient = 4
+    // -> [1, 2] >= [1, 2]?
+    // -> [1, 2] - [1, 2] = [0] | quocient = 5
+    // -> [0] >= [1, 2]?
+    // quotient = 5
+    // remainder = [0]
+    public ValorBigFraction div(ValorBigInt other) {
+        System.out.println("[bigint] [div] " + this + " / " + other);
 
-        if (outro.toString().equals("0")) {
+        if (other.toString().equals("0")) {
             throw new ArithmeticException("Divisão por zero não é permitida.");
         }
 
-        // se o divisor for maior que o dividendo
-        if (this.compareTo(outro) < 0) {
-            return new ValorBigFraction(List.of(this, outro));
+        // se divisor for maior que dividendo
+        if (this.compareTo(other) < 0) {
+            return new ValorBigFraction(List.of(this, other));
         }
 
-        List<Integer> resultado = new ArrayList<>();
-        List<Integer> resto = new ArrayList<>();
+        ValorBigInt remainder = this.clone();
+        ValorBigInt divisor = other.clone();
 
-        List<Integer> valor1 = new ArrayList<>(this.valor());
-        for (int i = 0; i < valor1.size(); i++) {
-            resto.add(valor1.get(i));
-
-            resto = removeTrailingZeros(resto);
-
-            int quociente = 0;
-            ValorBigInt restoBigInt = new ValorBigInt(new ArrayList<>(resto));
-
-            while (restoBigInt.compareTo(outro) >= 0) {
-                restoBigInt = restoBigInt.sub(outro);
-                quociente++;
-            }
-
-            resultado.add(quociente);
-            resto = restoBigInt.valor();
+        ValorBigInt quocient = new ValorBigInt(Collections.singletonList(0));
+        // conta quantas vezes o divisor cabe no dividendo
+        while (remainder.compareTo(divisor) >= 0) {
+            remainder = remainder.sub(divisor);
+            quocient = quocient.sum(new ValorBigInt(Collections.singletonList(1)));
         }
 
-        resultado = removeTrailingZeros(resultado);
-
-        // Retorna uma fração se houver resto
-        if (!resto.isEmpty() && !new ValorBigInt(resto).toString().equals("0")) {
-            return new ValorBigFraction(List.of(new ValorBigInt(valor1), outro));
+        // retorna uma fração se houver resto
+        if (!remainder.toString().equals("0")) {
+            ValorBigFraction result = new ValorBigFraction(List.of(this, other));
+            return result.simplify();
         }
 
         return new ValorBigFraction(
-            List.of(
-                new ValorBigInt(resultado), 
-                new ValorBigInt(Collections.singletonList(1))
-            )
-        );
+                List.of(
+                        quocient,
+                        new ValorBigInt(Collections.singletonList(1))));
     }
 
     // Retorna
     // 0 -> se os dois valores forem iguais
-    // 1 -> se valor1 for maior que valor2
-    // -1 -> se valor 1 for menor que valor2
-    public int compareTo(ValorBigInt outro) {
-        List<Integer> valor1 = this.valor();
-        List<Integer> valor2 = outro.valor();
+    // 1 -> se firstValue for maior que secondValue
+    // -1 -> se valor 1 for menor que secondValue
+    public int compareTo(ValorBigInt other) {
+        List<Integer> firstValue = this.valor();
+        List<Integer> secondValue = other.valor();
 
-        if (valor1.size() > valor2.size()) {
+        if (firstValue.size() > secondValue.size()) {
             return 1;
-        } else if (valor1.size() < valor2.size()) {
+        } else if (firstValue.size() < secondValue.size()) {
             return -1;
         }
 
-        for (int i = 0; i < valor1.size(); i++) {
-            if (valor1.get(i) > valor2.get(i)) {
+        for (int i = 0; i < firstValue.size(); i++) {
+            if (firstValue.get(i) > secondValue.get(i)) {
                 return 1;
-            } else if (valor1.get(i) < valor2.get(i)) {
+            } else if (firstValue.get(i) < secondValue.get(i)) {
                 return -1;
             }
         }
 
         return 0;
+    }
+
+    public ValorBigInt gcd(ValorBigInt other) {
+        ValorBigInt a = this;
+        ValorBigInt b = other;
+
+        if (this.compareTo(other) < 0) {
+            ValorBigInt temp = a;
+            a = b;
+            b = temp;
+        }
+
+        while (!b.toString().equals("0")) {
+            ValorBigInt remainder = a.mod(b);
+            a = b;
+            b = remainder;
+        }
+
+        return a;
+    }
+
+    public ValorBigInt mod(ValorBigInt other) {
+        if (other.toString().equals("0")) {
+            throw new ArithmeticException("Divisão por zero não é permitida.");
+        }
+
+        ValorBigInt remainder = this.clone();
+
+        while (remainder.compareTo(other) >= 0) {
+            remainder = remainder.sub(other);
+        }
+
+        return remainder;
     }
 
     // [0, 0, 1, 2, 3] -> [1, 2, 3]
