@@ -1,8 +1,48 @@
 { 
-   var a  = bigfrac:1/2,
-   proc incA ()  {
-     a := a + bigfrac:3/4
-   };
-   call incA();
-   write(a)
+	var bigfractionA = bigfrac:62/12 ,
+	var bigintB = bigint:12 ,
+	var bigintC = bigint:2 ,
+	var intD = 3 ,
+	var bigfractionE = bigfrac:8/4,
+	
+	proc soma ()  {
+		write("bigfractionA + bigintB:");
+		write(bigfractionA + bigintB);
+		write("bigfractionA + intD:");
+		write(bigfractionA + intD);
+		write("bigfractionA + bigfractionE");
+		write(bigfractionA + bigfractionE)
+	},
+
+	proc mul ()  {
+		write("bigfractionA * bigintB:");
+		write(bigfractionA * bigintB);
+		write("bigfractionA * intD:");
+		write(bigfractionA * intD);
+		write("bigfractionA * bigfractionE");
+		write(bigfractionA * bigfractionE)
+	},
+
+	proc div ()  {
+		write("bigfractionA / bigintB:");
+		write(bigfractionA / bigintB);
+		write("bigfractionA / intD:");
+		write(bigfractionA / intD);
+		write("bigfractionA / bigfractionE");
+		write(bigfractionA / bigfractionE)
+	},
+
+	proc sub ()  {
+		write("bigfractionA - bigintB:");
+		write(bigfractionA - bigintB);
+		write("bigfractionA - intD:");
+		write(bigfractionA - intD);
+		write("bigfractionA - bigfractionE");
+		write(bigfractionA - bigfractionE)
+	};
+
+	call soma();
+	call mul();
+	call div();
+	call sub()
 }

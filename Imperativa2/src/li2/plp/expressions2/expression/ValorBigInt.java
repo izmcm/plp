@@ -46,8 +46,8 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
         System.out.println("[bigint] [sum] " + this + " + " + other);
 
         List<Integer> result = new ArrayList<>();
-        List<Integer> firstValue = this.valor();
-        List<Integer> secondValue = other.valor();
+        List<Integer> firstValue = this.clone().valor();
+        List<Integer> secondValue = other.clone().valor();
 
         System.out.println("firstValue: " + firstValue);
         System.out.println("secondValue: " + secondValue);
@@ -93,8 +93,8 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
     public ValorBigInt sub(ValorBigInt other) {
         System.out.println("[bigint] [sub] " + this + " - " + other);
         List<Integer> result = new ArrayList<>();
-        List<Integer> firstValue = new ArrayList<>(this.valor());
-        List<Integer> secondValue = new ArrayList<>(other.valor());
+        List<Integer> firstValue = this.clone().valor();
+        List<Integer> secondValue = other.clone().valor();
 
         System.out.println("firstValue: " + firstValue);
         System.out.println("secondValue: " + secondValue);
@@ -153,8 +153,8 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
         System.out.println("[bigint] [mul] " + this + " * " + other);
 
         List<Integer> result = new ArrayList<>();
-        List<Integer> firstValue = new ArrayList<>(this.valor());
-        List<Integer> secondValue = new ArrayList<>(other.valor());
+        List<Integer> firstValue = this.clone().valor();
+        List<Integer> secondValue = other.clone().valor();
 
         Collections.reverse(firstValue);
         Collections.reverse(secondValue);
@@ -266,8 +266,8 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
     }
 
     public ValorBigInt gcd(ValorBigInt other) {
-        ValorBigInt a = this;
-        ValorBigInt b = other;
+        ValorBigInt a = this.clone();
+        ValorBigInt b = other.clone();
 
         if (this.compareTo(other) < 0) {
             ValorBigInt temp = a;
