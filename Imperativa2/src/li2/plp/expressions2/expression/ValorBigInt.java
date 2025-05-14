@@ -9,7 +9,8 @@ import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.expressions2.memory.AmbienteCompilacao;
 
 public class ValorBigInt extends ValorNumerico<List<Integer>> {
-    private boolean isNegative;
+
+    public boolean isNegative;
 
     public ValorBigInt(List<Integer> valor, boolean isNegative) {
         super(valor);
@@ -27,6 +28,9 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
             sb.append(digit);
         }
 
+        if (isNegative) {
+            sb.insert(0, "-");
+        }
         return sb.toString();
     }
 
@@ -52,35 +56,43 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
     public ValorBigInt sum(ValorBigInt other) {
         System.out.println("[bigint] [sum] " + this + " + " + other);
 
-        List<Integer> result = new ArrayList<>();
-        List<Integer> firstValue = this.clone().valor();
-        List<Integer> secondValue = other.clone().valor();
+        if (this.isNegative == other.isNegative) {
+            List<Integer> result = new ArrayList<>();
+            List<Integer> firstValue = this.clone().valor();
+            List<Integer> secondValue = other.clone().valor();
 
-        System.out.println("firstValue: " + firstValue);
-        System.out.println("secondValue: " + secondValue);
+            System.out.println("firstValue: " + firstValue);
+            System.out.println("secondValue: " + secondValue);
 
-        Collections.reverse(firstValue);
-        Collections.reverse(secondValue);
+            Collections.reverse(firstValue);
+            Collections.reverse(secondValue);
 
-        int carry = 0;
-        int maxLength = Math.max(firstValue.size(), secondValue.size());
+            int carry = 0;
+            int maxLength = Math.max(firstValue.size(), secondValue.size());
 
-        for (int i = 0; i < maxLength; i++) {
-            int firstDigit = i < firstValue.size() ? firstValue.get(i) : 0;
-            int secondDigit = i < secondValue.size() ? secondValue.get(i) : 0;
+            for (int i = 0; i < maxLength; i++) {
+                int firstDigit = i < firstValue.size() ? firstValue.get(i) : 0;
+                int secondDigit = i < secondValue.size() ? secondValue.get(i) : 0;
 
-            int sumHelper = firstDigit + secondDigit + carry;
-            result.add(sumHelper % 10);
-            carry = sumHelper / 10;
+                int sumHelper = firstDigit + secondDigit + carry;
+                result.add(sumHelper % 10);
+                carry = sumHelper / 10;
+            }
+
+            if (carry > 0) {
+                result.add(carry);
+            }
+
+            Collections.reverse(result);
+
+            return new ValorBigInt(result, this.isNegative);
+        } else {
+            ValorBigInt positiveValue = this.isNegative ? other : this;
+            ValorBigInt negativeValue = this.isNegative ? this : other;
+
+            // remove o sinal para tratar como uma subtração normal
+            return positiveValue.sub(new ValorBigInt(negativeValue.valor(), false));
         }
-
-        if (carry > 0) {
-            result.add(carry);
-        }
-
-        Collections.reverse(result);
-
-        return new ValorBigInt(result);
     }
 
     // [4, 9, 1] - [3, 5, 9]
@@ -99,17 +111,16 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
     // result = [1, 3, 2]
     public ValorBigInt sub(ValorBigInt other) {
         System.out.println("[bigint] [sub] " + this + " - " + other);
+        if (this.isNegative != other.isNegative) {
+            return this.sum(new ValorBigInt(other.valor(), !other.isNegative));
+        }
+
         List<Integer> result = new ArrayList<>();
         List<Integer> firstValue = this.clone().valor();
         List<Integer> secondValue = other.clone().valor();
 
         System.out.println("firstValue: " + firstValue);
         System.out.println("secondValue: " + secondValue);
-
-        if (firstValue.size() < secondValue.size() || (firstValue.size() == secondValue.size() &&
-                firstValue.toString().compareTo(secondValue.toString()) < 0)) {
-            throw new IllegalArgumentException("Subtração resultaria em um número negativo, o que não é suportado.");
-        }
 
         Collections.reverse(firstValue);
         Collections.reverse(secondValue);
@@ -136,7 +147,8 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
 
         result = removeTrailingZeros(result);
 
-        return new ValorBigInt(result);
+        boolean isResultNegative = this.compareTo(other) < 0;
+        return new ValorBigInt(result, isResultNegative);
     }
 
     // [4, 9] * [1, 2]
@@ -189,7 +201,9 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
             result.add(0);
         }
 
-        return new ValorBigInt(result);
+        boolean isResultNegative = this.isNegative != other.isNegative;
+
+        return new ValorBigInt(result, isResultNegative);
     }
 
     // [6, 0] / [1, 2]
@@ -225,15 +239,22 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
             return new ValorBigFraction(List.of(this, other));
         }
 
+        boolean isQuotientNegative = this.isNegative != other.isNegative;
+
         ValorBigInt remainder = this.clone();
         ValorBigInt divisor = other.clone();
 
         ValorBigInt quocient = new ValorBigInt(Collections.singletonList(0));
-        // conta quantas vezes o divisor cabe no dividendo
+
+        // conta quantas vezes o divisor cabe no dividendo (valores absolutos)
+        remainder.isNegative = false;
+        divisor.isNegative = false;
         while (remainder.compareTo(divisor) >= 0) {
             remainder = remainder.sub(divisor);
             quocient = quocient.sum(new ValorBigInt(Collections.singletonList(1)));
         }
+
+        quocient.isNegative = isQuotientNegative;
 
         // retorna uma fração se houver resto
         if (!remainder.toString().equals("0")) {
@@ -252,6 +273,12 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
     // 1 -> se firstValue for maior que secondValue
     // -1 -> se valor 1 for menor que secondValue
     public int compareTo(ValorBigInt other) {
+        if (this.isNegative && !other.isNegative) {
+            return -1;
+        } else if (!this.isNegative && other.isNegative) {
+            return 1;
+        }
+
         List<Integer> firstValue = this.valor();
         List<Integer> secondValue = other.valor();
 
@@ -276,6 +303,9 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
         ValorBigInt a = this.clone();
         ValorBigInt b = other.clone();
 
+        a.isNegative = false;
+        b.isNegative = false;
+
         if (this.compareTo(other) < 0) {
             ValorBigInt temp = a;
             a = b;
@@ -297,10 +327,16 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
         }
 
         ValorBigInt remainder = this.clone();
+        ValorBigInt divisor = other.clone();
 
-        while (remainder.compareTo(other) >= 0) {
-            remainder = remainder.sub(other);
+        remainder.isNegative = false;
+        divisor.isNegative = false;
+
+        while (remainder.compareTo(divisor) >= 0) {
+            remainder = remainder.sub(divisor);
         }
+
+        remainder.isNegative = this.isNegative;
 
         return remainder;
     }

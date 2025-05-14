@@ -9,6 +9,7 @@ import li2.plp.expressions2.memory.AmbienteCompilacao;
 // Representa uma fração com numerador e denominador como listas de dígitos
 // Exemplo: 123/456 será representado como [[1, 2, 3], [4, 5, 6]]
 public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
+
     public ValorBigFraction(List<ValorBigInt> valor) {
         super(valor);
 
@@ -99,16 +100,22 @@ public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
     public ValorBigFraction simplify() {
         ValorBigInt numerator = this.valor().get(0);
         ValorBigInt denominator = this.valor().get(1);
-    
+
         // Calcula o MDC (Máximo Divisor Comum) entre o numerador e o denominador
         ValorBigInt gcd = numerator.gcd(denominator);
-    
+
         // Divide o numerador e o denominador pelo MDC para simplificar a fração
         // Pega apenas o primeiro elemento da lista retornada já que o segundo é sempre 1
         // Porque temos garantia que a divisão é exata
         ValorBigInt simplifiedNumerator = numerator.div(gcd).valor().get(0);
         ValorBigInt simplifiedDenominator = denominator.div(gcd).valor().get(0);
-    
+
+        // Ajusta o sinal: o denominador deve ser sempre positivo
+        if (simplifiedDenominator.isNegative) {
+            simplifiedNumerator.isNegative = !simplifiedNumerator.isNegative;
+            simplifiedDenominator.isNegative = false;
+        }
+
         return new ValorBigFraction(List.of(simplifiedNumerator, simplifiedDenominator));
     }
 }

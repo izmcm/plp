@@ -1,0 +1,92 @@
+{ 
+	var bigintA = bigint:62 ,
+	var bigintB = bigint:12 ,
+	var bigintC = bigint:2 ,
+	var intD = 3 ,
+	var bigfractionE = bigfrac:8/4,
+	var negativeBigIntF = bigint:-2,
+	var negativeBigIntG = bigint:-12,
+	var negativeIntH = -5,
+	var negativeFractionI = bigfrac:-6/7,
+
+	proc soma ()  {
+		write("bigintA + bigintB:");
+		write(bigintA + bigintB);
+		write("bigintA + intD:");
+		write(bigintA + intD);
+		write("bigintA + bigfractionE");
+		write(bigintA + bigfractionE);
+		write("negativeBigIntF + negativeBigIntG");
+		write(negativeBigIntF + negativeBigIntG);
+		write("negativeBigIntF + intD");
+		write(negativeBigIntF + intD);
+		write("negativeBigIntF + bigfractionE");
+		write(negativeBigIntF + bigfractionE);
+		write("negativeBigIntF + negativeIntH");
+		write(negativeBigIntF + negativeIntH);
+		write("bigintA + negativeFractionI");
+		write(bigintA + negativeFractionI)
+	},
+
+	proc mul ()  {
+		write("bigintA * bigintB:");
+		write(bigintA * bigintB);
+		write("bigintA * intD:");
+		write(bigintA * intD);
+		write("bigintA * bigfractionE");
+		write(bigintA * bigfractionE);
+		write("negativeBigIntF * negativeBigIntG");
+		write(negativeBigIntF * negativeBigIntG);
+		write("negativeBigIntF * intD");
+		write(negativeBigIntF * intD);
+		write("negativeBigIntF * bigfractionE");
+		write(negativeBigIntF * bigfractionE);
+		write("bigintB * negativeIntH");
+		write(bigintB * negativeIntH);
+		write("bigintC * negativeFractionI");
+		write(bigintC * negativeFractionI)
+	},
+
+	proc div ()  {
+		write("bigintA / bigintB:");
+		write(bigintA / bigintB);
+		write("bigintA / intD:");
+		write(bigintA / intD);
+		write("bigintA / bigfractionE");
+		write(bigintA / bigfractionE);
+		write("negativeBigIntF / negativeBigIntG");
+		write(negativeBigIntF / negativeBigIntG);
+		write("negativeBigIntF / intD");
+		write(negativeBigIntF / intD);
+		write("negativeBigIntF / bigfractionE");
+		write(negativeBigIntF / bigfractionE);
+		write("bigintB / negativeIntH");
+		write(bigintB / negativeIntH);
+		write("bigintC / negativeFractionI");
+		write(bigintC / negativeFractionI)
+	},
+
+	proc sub ()  {
+		write("bigintA - bigintB:");
+		write(bigintA - bigintB);
+		write("bigintA - intD:");
+		write(bigintA - intD);
+		write("bigintA - bigfractionE");
+		write(bigintA - bigfractionE);
+		write("negativeBigIntF - negativeBigIntG");
+		write(negativeBigIntF - negativeBigIntG);
+		write("negativeBigIntF - intD");
+		write(negativeBigIntF - intD);
+		write("negativeBigIntF - bigfractionE");
+		write(negativeBigIntF - bigfractionE);
+		write("negativeBigIntF - negativeIntH");
+		write(negativeBigIntF - negativeIntH);
+		write("bigintA - negativeFractionI");
+		write(bigintA - negativeFractionI)
+	};
+
+	call soma();
+	call sub();
+	call div();
+	call mul()
+}

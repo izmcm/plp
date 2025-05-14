@@ -96,13 +96,16 @@ public abstract class ValorNumerico<T> extends ValorConcreto<T> {
             return (ValorBigInt) this;
         } else if (this instanceof ValorInteiro) {
             int valorInteiro = ((ValorInteiro) this).valor();
-            String valorString = Integer.toString(valorInteiro);
+
+            boolean isNegative = valorInteiro < 0;
+
+            String valorString = Integer.toString(Math.abs(valorInteiro));
             List<Integer> listaDigitos = new ArrayList<>();
             for (char c : valorString.toCharArray()) {
                 listaDigitos.add(Character.getNumericValue(c));
             }
 
-            ValorBigInt valorBigInt = new ValorBigInt(listaDigitos);
+            ValorBigInt valorBigInt = new ValorBigInt(listaDigitos, isNegative);
             return valorBigInt;
         } else {
             throw new UnsupportedOperationException("Não é possível converter " + this.getClass().getSimpleName() + " para ValorBigInt.");
@@ -114,12 +117,15 @@ public abstract class ValorNumerico<T> extends ValorConcreto<T> {
             return (ValorBigFraction) this;
         } else if (this instanceof ValorInteiro) {
             int valorInteiro = ((ValorInteiro) this).valor();
+            boolean isNegative = valorInteiro < 0;
+
+            String valorString = Integer.toString(Math.abs(valorInteiro));
             List<Integer> listaDigitos = new ArrayList<>();
-            for (char c : Integer.toString(valorInteiro).toCharArray()) {
+            for (char c : valorString.toCharArray()) {
                 listaDigitos.add(Character.getNumericValue(c));
             }
 
-            ValorBigInt numerador = new ValorBigInt(listaDigitos);
+            ValorBigInt numerador = new ValorBigInt(listaDigitos, isNegative);
             ValorBigInt denominador = new ValorBigInt(new ArrayList<>(List.of(1)));
             List<ValorBigInt> valor = new ArrayList<>();
             valor.add(numerador);
