@@ -4,14 +4,18 @@
 	var bigintC = bigint:2 ,
 	var intD = 3 ,
 	var bigfractionE = bigfrac:8/4,
-	
+	var negativeBigIntF = bigint:-2,
+	var negativeBigIntG = bigint:-12,
+
 	proc soma ()  {
 		write("bigintA + bigintB:");
 		write(bigintA + bigintB);
 		write("bigintA + intD:");
 		write(bigintA + intD);
 		write("bigintA + bigfractionE");
-		write(bigintA + bigfractionE)
+		write(bigintA + bigfractionE);
+		write("negativeBigIntF + negativeBigIntG");
+		write(negativeBigIntF + negativeBigIntG)
 	},
 
 	proc mul ()  {
@@ -20,7 +24,9 @@
 		write("bigintA * intD:");
 		write(bigintA * intD);
 		write("bigintA * bigfractionE");
-		write(bigintA * bigfractionE)
+		write(bigintA * bigfractionE);
+		write("negativeBigIntF * negativeBigIntG");
+		write(negativeBigIntF * negativeBigIntG)
 	},
 
 	proc div ()  {
@@ -29,7 +35,9 @@
 		write("bigintA / intD:");
 		write(bigintA / intD);
 		write("bigintA / bigfractionE");
-		write(bigintA / bigfractionE)
+		write(bigintA / bigfractionE);
+		write("negativeBigIntF / negativeBigIntG");
+		write(negativeBigIntF / negativeBigIntG)
 	},
 
 	proc sub ()  {
@@ -38,7 +46,9 @@
 		write("bigintA - intD:");
 		write(bigintA - intD);
 		write("bigintA - bigfractionE");
-		write(bigintA - bigfractionE)
+		write(bigintA - bigfractionE);
+		write("negativeBigIntF - negativeBigIntG");
+		write(negativeBigIntF - negativeBigIntG)
 	};
 
 	call soma();

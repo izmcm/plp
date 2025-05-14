@@ -145,9 +145,9 @@ TOKEN : /* TOKENS DOS POSS�VEIS TIPOS */
 
 TOKEN : /* LITERALS */
 {
-  < BIGINT_LITERAL : "bigint:" (["0"-"9"])+ >
+  < BIGINT_LITERAL : "bigint:" (["-"])? <DECIMAL_LITERAL> >
 |
-  < BIGFRACTION_LITERAL : "bigfrac:" (["0"-"9"])+ "/" (["0"-"9"])+ >
+  < BIGFRACTION_LITERAL : "bigfrac:" (["-"])? <DECIMAL_LITERAL> "/" (["-"])? <DECIMAL_LITERAL> >
 |
   < INTEGER_LITERAL:
         <DECIMAL_LITERAL> (["l","L"])?
@@ -421,6 +421,11 @@ Valor PValorBigInt() :
     token = <BIGINT_LITERAL>
     {
         String tokenValue = token.toString().substring(7).trim();
+		boolean isNegative = tokenValue.startsWith("-");
+        if (isNegative) {
+        	tokenValue = tokenValue.substring(1);
+        }
+
 		List<Integer> digits = new ArrayList<Integer>();
 		for (char c : tokenValue.toCharArray()) {
 			if (Character.isDigit(c)) {
@@ -429,7 +434,7 @@ Valor PValorBigInt() :
 				throw new ParseException("Valor deve conter apenas dígitos.");
 			}
 		}
-        return new ValorBigInt(digits);
+        return new ValorBigInt(digits, isNegative);
     }
 }
 
@@ -447,8 +452,11 @@ Valor PValorBigFraction() :
             throw new ParseException("ValorBigFraction deve conter exatamente um numerador e um denominador separados por '/'.");
         }
 
+        boolean isNumeratorNegative = parts[0].startsWith("-");
+        String numeratorValue = isNumeratorNegative ? parts[0].substring(1) : parts[0];
+
 		List<Integer> firstNumber = new ArrayList<Integer>();
-		for (char c : parts[0].toCharArray()) {
+		for (char c : numeratorValue.toCharArray()) {
 			if (Character.isDigit(c)) {
 				firstNumber.add(c - '0');
 			} else {
@@ -456,8 +464,10 @@ Valor PValorBigFraction() :
 			}
 		}
 
+        boolean isDenominatorNegative = parts[1].startsWith("-");
+        String denominatorValue = isDenominatorNegative ? parts[1].substring(1) : parts[1];
 		List<Integer> secondNumber = new ArrayList<Integer>();
-		for (char c : parts[1].toCharArray()) {
+		for (char c : denominatorValue.toCharArray()) {
 			if (Character.isDigit(c)) {
 				secondNumber.add(c - '0');
 			} else {
@@ -466,8 +476,8 @@ Valor PValorBigFraction() :
 		}
 
         List<ValorBigInt> fraction = new ArrayList<ValorBigInt>();
-        fraction.add(new ValorBigInt(firstNumber)); 
-        fraction.add(new ValorBigInt(secondNumber));
+        fraction.add(new ValorBigInt(firstNumber, isNumeratorNegative)); 
+        fraction.add(new ValorBigInt(secondNumber, isDenominatorNegative));
         return new ValorBigFraction(fraction);
     }
 }

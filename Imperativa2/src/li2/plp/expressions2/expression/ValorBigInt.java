@@ -9,8 +9,15 @@ import li2.plp.expressions1.util.TipoPrimitivo;
 import li2.plp.expressions2.memory.AmbienteCompilacao;
 
 public class ValorBigInt extends ValorNumerico<List<Integer>> {
-    public ValorBigInt(List<Integer> valor) {
+    private boolean isNegative;
+
+    public ValorBigInt(List<Integer> valor, boolean isNegative) {
         super(valor);
+        this.isNegative = isNegative;
+    }
+
+    public ValorBigInt(List<Integer> valor) {
+        this(valor, false);
     }
 
     @Override
