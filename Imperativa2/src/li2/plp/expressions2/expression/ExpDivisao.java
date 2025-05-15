@@ -20,7 +20,6 @@ public class ExpDivisao extends ExpBinaria {
         System.out.println("valorEsq: " + valorEsq);
         System.out.println("valorDir: " + valorDir);
 
-        // Delegue a multiplicação para ValorNumerico
         if (valorEsq instanceof ValorNumerico && valorDir instanceof ValorNumerico) {
             return ((ValorNumerico<?>) valorEsq).div((ValorNumerico<?>) valorDir);
         }

@@ -24,7 +24,6 @@ public class ExpSoma extends ExpBinaria {
         System.out.println("valorEsq: " + valorEsq);
         System.out.println("valorDir: " + valorDir);
 
-        // Delegue a soma para ValorNumerico
         if (valorEsq instanceof ValorNumerico && valorDir instanceof ValorNumerico) {
             return ((ValorNumerico<?>) valorEsq).sum((ValorNumerico<?>) valorDir);
         }

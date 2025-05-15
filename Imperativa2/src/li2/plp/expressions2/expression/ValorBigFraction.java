@@ -109,7 +109,7 @@ public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
         ValorBigInt simplifiedNumerator = numerator.div(gcd).valor().get(0);
         ValorBigInt simplifiedDenominator = denominator.div(gcd).valor().get(0);
 
-        // Ajusta o sinal: o denominador deve ser sempre positivo
+        // O denominador deve ser sempre positivo
         if (simplifiedDenominator.isNegative) {
             simplifiedNumerator.isNegative = !simplifiedNumerator.isNegative;
             simplifiedDenominator.isNegative = false;
