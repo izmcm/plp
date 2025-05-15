@@ -25,7 +25,6 @@ public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
 
     @Override
     public String toString() {
-        System.out.println("ValorBigFraction this.valor(): " + this.valor());
         return this.valor().get(0).toString() + "/" + this.valor().get(1).toString();
     }
 
@@ -41,22 +40,11 @@ public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
         ValorBigInt secondNumerator = other.valor().get(0);
         ValorBigInt secondDenominator = other.valor().get(1);
 
-        System.err.println("firstNumerator: " + firstNumerator);
-        System.err.println("firstDenominator: " + firstDenominator);
-        System.err.println("secondNumerator: " + secondNumerator);
-        System.err.println("secondDenominator: " + secondDenominator);
-
         ValorBigInt newFirstNumerator = firstNumerator.multiply(secondDenominator);
         ValorBigInt newSecondNumerator = secondNumerator.multiply(firstDenominator);
 
-        System.err.println("newFirstNumerator: " + newFirstNumerator);
-        System.err.println("newSecondNumerator: " + newSecondNumerator);
-
         ValorBigInt resultNumerator = newFirstNumerator.sum(newSecondNumerator);
         ValorBigInt resultDenominator = firstDenominator.multiply(secondDenominator);
-
-        System.err.println("resultNumerator: " + resultNumerator);
-        System.err.println("resultDenominator: " + resultDenominator);
 
         ValorBigFraction result = new ValorBigFraction(List.of(resultNumerator, resultDenominator));
         return result.simplify();
@@ -114,16 +102,12 @@ public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
 
         // Calcula o MDC (Máximo Divisor Comum) entre o numerador e o denominador
         ValorBigInt gcd = numerator.abs().gcd(denominator.abs());
-        System.err.println("gcd: " + gcd);
     
         // Divide o numerador e o denominador pelo MDC para simplificar a fração
         // Pega apenas o primeiro elemento da lista retornada já que o segundo é sempre 1
         // Porque temos garantia que a divisão é exata
         ValorBigInt simplifiedNumerator = numerator.div(gcd).valor().get(0);
         ValorBigInt simplifiedDenominator = denominator.div(gcd).valor().get(0);
-
-        System.err.println("simplifiedNumerator: " + simplifiedNumerator);
-        System.err.println("simplifiedDenominator: " + simplifiedDenominator);
 
         // Ajusta o sinal: o denominador deve ser sempre positivo
         if (simplifiedDenominator.isNegative) {

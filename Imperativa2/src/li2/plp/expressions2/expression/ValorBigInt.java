@@ -247,7 +247,6 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
     // quotient = [4, 0]
     // remainder = [0]
     public ValorBigFraction div(ValorBigInt other) {
-        System.err.println("[bigint] [div] " + this + " / " + other);
         if (other.toString().equals("0")) {
             throw new ArithmeticException("Divisão por zero não é permitida.");
         }
@@ -257,7 +256,6 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
         }
 
         if (this.abs().compareTo(other.abs()) < 0) {
-            System.err.println("[bigint] [div] this < other");
             return new ValorBigFraction(List.of(this.clone(), other.clone())).simplify();
         }
 
@@ -379,8 +377,6 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
     //
     // Resultado final: GCD = [6]
     public ValorBigInt gcd(ValorBigInt other) {
-        System.out.println("[bigint] [gcd] " + this + " / " + other);
-
         ValorBigInt x = this.clone();
         ValorBigInt y = other.clone();
         x.isNegative = false;
@@ -423,7 +419,6 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
             x = x.multiply(new ValorBigInt(List.of(2)));
         }
 
-        System.err.println("return gcd: " + x);
         return x;
     }
 
