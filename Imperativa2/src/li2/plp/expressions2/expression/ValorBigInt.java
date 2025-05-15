@@ -40,7 +40,7 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
 
     @Override
     public ValorBigInt clone() {
-        return new ValorBigInt(new ArrayList<>(this.valor()));
+        return new ValorBigInt(new ArrayList<>(this.valor()), this.isNegative);
     }
 
     // [1, 3, 2] + [3, 5, 9]
@@ -54,15 +54,10 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
     // 2. Inverter lista
     // result = [4, 9, 1]
     public ValorBigInt sum(ValorBigInt other) {
-        System.out.println("[bigint] [sum] " + this + " + " + other);
-
         if (this.isNegative == other.isNegative) {
             List<Integer> result = new ArrayList<>();
             List<Integer> firstValue = this.clone().valor();
             List<Integer> secondValue = other.clone().valor();
-
-            System.out.println("firstValue: " + firstValue);
-            System.out.println("secondValue: " + secondValue);
 
             Collections.reverse(firstValue);
             Collections.reverse(secondValue);
@@ -110,21 +105,29 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
     // 3. Remover zeros à esquerda
     // result = [1, 3, 2]
     public ValorBigInt sub(ValorBigInt other) {
-        System.out.println("[bigint] [sub] " + this + " - " + other);
+        // -1 - (+1) = - 1 - 1 = -2
+        // 1 - (-1) = 1 + 1 = 2
         if (this.isNegative != other.isNegative) {
             return this.sum(new ValorBigInt(other.valor(), !other.isNegative));
         }
 
-        List<Integer> result = new ArrayList<>();
+        boolean resultIsNegative = false;
         List<Integer> firstValue = this.clone().valor();
         List<Integer> secondValue = other.clone().valor();
 
-        System.out.println("firstValue: " + firstValue);
-        System.out.println("secondValue: " + secondValue);
+        // se o primeiro for menor que o segundo, inverte os valores
+        // e a subtração será negativa
+        if (this.abs().compareTo(other.abs()) < 0) {
+            resultIsNegative = true;
+            List<Integer> temp = firstValue;
+            firstValue = secondValue;
+            secondValue = temp;
+        }
 
         Collections.reverse(firstValue);
         Collections.reverse(secondValue);
 
+        List<Integer> result = new ArrayList<>();
         int borrow = 0;
 
         for (int i = 0; i < firstValue.size(); i++) {
@@ -147,8 +150,11 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
 
         result = removeTrailingZeros(result);
 
-        boolean isResultNegative = this.compareTo(other) < 0;
-        return new ValorBigInt(result, isResultNegative);
+        return new ValorBigInt(result, resultIsNegative);
+    }
+
+    public ValorBigInt abs() {
+        return new ValorBigInt(this.valor(), false);
     }
 
     // [4, 9] * [1, 2]
@@ -169,8 +175,6 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
     // 3. Inverter lista
     // result = [5, 8, 8]
     public ValorBigInt multiply(ValorBigInt other) {
-        System.out.println("[bigint] [mul] " + this + " * " + other);
-
         List<Integer> result = new ArrayList<>();
         List<Integer> firstValue = this.clone().valor();
         List<Integer> secondValue = other.clone().valor();
@@ -206,66 +210,89 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
         return new ValorBigInt(result, isResultNegative);
     }
 
-    // [6, 0] / [1, 2]
+    // [1, 0, 0, 0] / [2, 5]
     // 1. Checa se divisor é zero
     // 2. Checa se divisor é maior que dividendo
-    // -----------
-    // this = [6, 0]
-    // other = [1, 2]
+    // ------------------------------------------
+    // this (dividendo) = [1, 0, 0, 0]
+    // other (divisor) = [2, 5]
+    // 
+    // remainder = []
+    // quotientDigits = []
     //
-    // remaider = [6, 0]
-    // while (remaider >= other) [6, 0] >= [1, 2]?
-    // -> [6, 0] - [1, 2] = [4, 8] | quocient = 1
-    // -> [4, 8] >= [1, 2]?
-    // -> [4, 8] - [1, 2] = [3, 6] | quocient = 2
-    // -> [3, 6] >= [1, 2]?
-    // -> [3, 6] - [1, 2] = [2, 4] | quocient = 3
-    // -> [2, 4] >= [1, 2]?
-    // -> [2, 4] - [1, 2] = [1, 2] | quocient = 4
-    // -> [1, 2] >= [1, 2]?
-    // -> [1, 2] - [1, 2] = [0] | quocient = 5
-    // -> [0] >= [1, 2]?
-    // quotient = 5
+    // 1. Primeiro dígito do dividendo
+    // remainder = [1]
+    // 1 < 25? -> quotientDigits = [0]
+    //
+    // 2. Adiciona próximo dígito
+    // remainder = [1, 0] = 10
+    // 10 < 25? -> quotientDigits = [0, 0]
+    //
+    // 3. Adiciona próximo dígito
+    // remainder = [1, 0, 0] = 100
+    // 100 >= 25?
+    // -> [100] - [25] = [75]   | count = 1
+    // -> [75] - [25] = [50]    | count = 2
+    // -> [50] - [25] = [25]    | count = 3
+    // -> [25] - [25] = [0]     | count = 4
+    // -> [0] < [25] -> fim
+    // quotientDigits = [0, 0, 4]
+    // remainder = [0]
+    //
+    // 4. Adiciona último dígito
+    // remainder = [0, 0]
+    // 0 < 25? -> quotientDigits = [0, 0, 4, 0] 
+    //
+    // Remover zeros à esquerda:
+    // quotient = [4, 0]
     // remainder = [0]
     public ValorBigFraction div(ValorBigInt other) {
-        System.out.println("[bigint] [div] " + this + " / " + other);
-
+        System.err.println("[bigint] [div] " + this + " / " + other);
         if (other.toString().equals("0")) {
             throw new ArithmeticException("Divisão por zero não é permitida.");
         }
 
-        // se divisor for maior que dividendo
-        if (this.compareTo(other) < 0) {
-            return new ValorBigFraction(List.of(this, other));
+        if(other.toString().equals("1")) {
+            return new ValorBigFraction(List.of(this.clone(), new ValorBigInt(List.of(1))));
+        }
+
+        if (this.abs().compareTo(other.abs()) < 0) {
+            System.err.println("[bigint] [div] this < other");
+            return new ValorBigFraction(List.of(this.clone(), other.clone())).simplify();
         }
 
         boolean isQuotientNegative = this.isNegative != other.isNegative;
 
-        ValorBigInt remainder = this.clone();
+        ValorBigInt dividend = this.clone();
+        dividend.isNegative = false;
         ValorBigInt divisor = other.clone();
-
-        ValorBigInt quocient = new ValorBigInt(Collections.singletonList(0));
-
-        // conta quantas vezes o divisor cabe no dividendo (valores absolutos)
-        remainder.isNegative = false;
         divisor.isNegative = false;
-        while (remainder.compareTo(divisor) >= 0) {
-            remainder = remainder.sub(divisor);
-            quocient = quocient.sum(new ValorBigInt(Collections.singletonList(1)));
+
+        List<Integer> quotientDigits = new ArrayList<>();
+        List<Integer> remainder = new ArrayList<>();
+
+        for (int digit : dividend.valor()) {
+            remainder.add(digit);
+            remainder = removeTrailingZeros(remainder);
+
+            int count = 0;
+            while ((new ValorBigInt(remainder)).compareTo(divisor) >= 0) {
+                remainder = (new ValorBigInt(remainder)).sub(divisor).valor();
+                count++;
+            }
+            quotientDigits.add(count);
         }
 
-        quocient.isNegative = isQuotientNegative;
+        remainder = removeTrailingZeros(remainder);
+        quotientDigits = removeTrailingZeros(quotientDigits);
 
-        // retorna uma fração se houver resto
-        if (!remainder.toString().equals("0")) {
-            ValorBigFraction result = new ValorBigFraction(List.of(this, other));
-            return result.simplify();
+        ValorBigInt quotient = new ValorBigInt(quotientDigits, isQuotientNegative);
+
+        if (remainder.isEmpty() || (remainder.size() == 1 && remainder.get(0) == 0)) {
+            return new ValorBigFraction(List.of(quotient, new ValorBigInt(List.of(1))));
+        } else {
+            return new ValorBigFraction(List.of(this.clone(), other.clone()));
         }
-
-        return new ValorBigFraction(
-                List.of(
-                        quocient,
-                        new ValorBigInt(Collections.singletonList(1))));
     }
 
     // Retorna
@@ -299,46 +326,109 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
         return 0;
     }
 
+    // Stein's Algorithm
+    // gcd(x, 0) = x
+    // gcd(2x, 2y) = 2*gcd(x, y)
+    // gcd(x, 2y) = gcd(x, y)
+    // Se x e y forem ímpares, gcd(x, y) = gcd(|x - y|, min(x, y))
+    //
+    // [4, 8] / [2, 4]  ← GCD([4, 8], [2, 4])
+    // 1. this = [4, 8]  -> 48
+    // 2. other = [2, 4] -> 24
+    //
+    // Remove sinais negativos (se houver)
+    //
+    // shift = 0
+    //
+    // 1. Enquanto os dois forem pares, divide por 2:
+    // x % 2 == 0 && y % 2 == 0:
+    // -> x = x / 2 = [2, 4] = 24
+    // -> y = y / 2 = [1, 2] = 12
+    // -> shift++ -> shift = 1
+    //
+    // 2. Enquanto X for par, divide por 2:
+    // x já é par:
+    // -> x = x / 2 = [6]
+    //
+    // 3. Laço principal (enquanto y != 0):
+    //  a. Enquanto Y for par, divide por 2:
+    //     y = [1, 2] = 12
+    //     -> y = y / 2 = [6]
+    //     -> y = y / 2 = [3]
+    //
+    //  b. Compara x e y:
+    //     x = [6]
+    //     y = [3]
+    //     x > y -> troca:
+    //     -> x = [3]
+    //     -> y = [6]
+    //
+    //  c. Subtrai:
+    //     y = y - x = [6] - [3] = [3]
+    //
+    //  d. y é ímpar -> próxima iteração
+    //     x = [3]
+    //     y = [3]
+    //     x == y -> próxima subtração:
+    //     -> y = y - x = [3] - [3] = [0]
+    //
+    // y == 0 -> fim do loop
+    //
+    // 4. Restaura fatores comuns de 2 removidos no início:
+    // x = x * 2^shift = [3] * 2 = [6]
+    //
+    // Resultado final: GCD = [6]
     public ValorBigInt gcd(ValorBigInt other) {
-        ValorBigInt a = this.clone();
-        ValorBigInt b = other.clone();
+        System.out.println("[bigint] [gcd] " + this + " / " + other);
 
-        a.isNegative = false;
-        b.isNegative = false;
+        ValorBigInt x = this.clone();
+        ValorBigInt y = other.clone();
+        x.isNegative = false;
+        y.isNegative = false;
 
-        if (this.compareTo(other) < 0) {
-            ValorBigInt temp = a;
-            a = b;
-            b = temp;
+        if (x.toString().equals("0")) {
+            return y;
+        }
+        if (y.toString().equals("0")) {
+            return x;
         }
 
-        while (!b.toString().equals("0")) {
-            ValorBigInt remainder = a.mod(b);
-            a = b;
-            b = remainder;
+        int shift = 0;
+
+        while (x.isEven() && y.isEven()) {
+            x = x.div(new ValorBigInt(List.of(2))).valor().get(0);
+            y = y.div(new ValorBigInt(List.of(2))).valor().get(0);
+            shift++;
         }
 
-        return a;
+        while (x.isEven()) {
+            x = x.div(new ValorBigInt(List.of(2))).valor().get(0);
+        }
+
+        while (!y.toString().equals("0")) {
+            while (y.isEven()) {
+                y = y.div(new ValorBigInt(List.of(2))).valor().get(0);
+            }
+
+            if (x.compareTo(y) > 0) {
+                ValorBigInt temp = x;
+                x = y;
+                y = temp;
+            }
+
+            y = y.sub(x);
+        }
+
+        for (int i = 0; i < shift; i++) {
+            x = x.multiply(new ValorBigInt(List.of(2)));
+        }
+
+        System.err.println("return gcd: " + x);
+        return x;
     }
 
-    public ValorBigInt mod(ValorBigInt other) {
-        if (other.toString().equals("0")) {
-            throw new ArithmeticException("Divisão por zero não é permitida.");
-        }
-
-        ValorBigInt remainder = this.clone();
-        ValorBigInt divisor = other.clone();
-
-        remainder.isNegative = false;
-        divisor.isNegative = false;
-
-        while (remainder.compareTo(divisor) >= 0) {
-            remainder = remainder.sub(divisor);
-        }
-
-        remainder.isNegative = this.isNegative;
-
-        return remainder;
+    public boolean isEven() {
+        return this.valor().get(this.valor().size() - 1) % 2 == 0;
     }
 
     // [0, 0, 1, 2, 3] -> [1, 2, 3]

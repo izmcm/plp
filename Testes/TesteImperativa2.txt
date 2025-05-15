@@ -5,5 +5,5 @@
    };
    call incA();
    call incA();
-   write(a);
+   write(a)
 }
