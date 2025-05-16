@@ -107,9 +107,18 @@ public abstract class ValorNumerico<T> extends ValorConcreto<T> {
 
             ValorBigInt valorBigInt = new ValorBigInt(listaDigitos, isNegative);
             return valorBigInt;
-        } else {
-            throw new UnsupportedOperationException("Não é possível converter " + this.getClass().getSimpleName() + " para ValorBigInt.");
+        } else if (this instanceof ValorBigFraction) {
+            ValorBigFraction valueBigFraction = (ValorBigFraction) this;
+            ValorBigInt numerator = valueBigFraction.valor().get(0);
+            ValorBigInt denominator = valueBigFraction.valor().get(1);
+
+            if (denominator.compareTo(new ValorBigInt(List.of(1))) == 0) {
+                return numerator;
+            }
         }
+
+        throw new UnsupportedOperationException("Não é possível converter " + this.getClass().getSimpleName() + " para ValorBigInt.");
+
     }
 
     public ValorBigFraction toBigFraction() {

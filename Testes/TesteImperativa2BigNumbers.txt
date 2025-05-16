@@ -8,6 +8,7 @@
 	var negativeBigIntG = bigint:-982374,
 	var negativeIntH = -12983,
 	var negativeFractionI = bigfrac:-9823/777,
+	var intJ = 2,
 
 	proc soma ()  {
 		write("bigintA + bigintB:");
@@ -63,7 +64,9 @@
 		write("negativeBigIntF / negativeIntH");
 		write(negativeBigIntF / negativeIntH);
 		write("bigintA / negativeFractionI");
-		write(bigintA / negativeFractionI)
+		write(bigintA / negativeFractionI);
+		write("bigintA / intJ");
+		write(bigintA / intJ)
 	},
 
 	proc sub ()  {

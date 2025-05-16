@@ -33,7 +33,7 @@ public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
         return new ValorBigFraction(this.valor());
     }
 
-    public ValorBigFraction sum(ValorBigFraction other) {
+    public ValorNumerico sum(ValorBigFraction other) {
         ValorBigInt firstNumerator = this.valor().get(0);
         ValorBigInt firstDenominator = this.valor().get(1);
 
@@ -50,7 +50,7 @@ public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
         return result.simplify();
     }
 
-    public ValorBigFraction sub(ValorBigFraction other) {
+    public ValorNumerico sub(ValorBigFraction other) {
         ValorBigInt firstNumerator = this.valor().get(0);
         ValorBigInt firstDenominator = this.valor().get(1);
 
@@ -67,7 +67,7 @@ public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
         return result.simplify();
     }
 
-    public ValorBigFraction multiply(ValorBigFraction other) {
+    public ValorNumerico multiply(ValorBigFraction other) {
         ValorBigInt firstNumerator = this.valor().get(0);
         ValorBigInt firstDenominator = this.valor().get(1);
 
@@ -81,7 +81,7 @@ public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
         return result.simplify();
     }
 
-    public ValorBigFraction div(ValorBigFraction other) {
+    public ValorNumerico div(ValorBigFraction other) {
         ValorBigInt firstNumerator = this.valor().get(0);
         ValorBigInt firstDenominator = this.valor().get(1);
 
@@ -96,7 +96,7 @@ public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
         return result.simplify();
     }
 
-    public ValorBigFraction simplify() {
+    public ValorNumerico simplify() {
         ValorBigInt numerator = this.clone().valor().get(0);
         ValorBigInt denominator = this.clone().valor().get(1);
 
@@ -104,15 +104,19 @@ public class ValorBigFraction extends ValorNumerico<List<ValorBigInt>> {
         ValorBigInt gcd = numerator.abs().gcd(denominator.abs());
     
         // Divide o numerador e o denominador pelo MDC para simplificar a fração
-        // Pega apenas o primeiro elemento da lista retornada já que o segundo é sempre 1
-        // Porque temos garantia que a divisão é exata
-        ValorBigInt simplifiedNumerator = numerator.div(gcd).valor().get(0);
-        ValorBigInt simplifiedDenominator = denominator.div(gcd).valor().get(0);
+        // Como é o MDC, o resultado é sempre um ValorBigInt
+        ValorBigInt simplifiedNumerator = ((ValorBigInt) numerator.div(gcd));
+        ValorBigInt simplifiedDenominator = ((ValorBigInt) denominator.div(gcd));
 
         // O denominador deve ser sempre positivo
         if (simplifiedDenominator.isNegative) {
             simplifiedNumerator.isNegative = !simplifiedNumerator.isNegative;
             simplifiedDenominator.isNegative = false;
+        }
+
+        if(simplifiedDenominator.compareTo((new ValorBigInt(List.of(1)))) == 0) {
+            System.err.println("ValorBigFraction: denominador igual a 1");
+            return simplifiedNumerator.toBigInt();
         }
 
         return new ValorBigFraction(List.of(simplifiedNumerator, simplifiedDenominator));

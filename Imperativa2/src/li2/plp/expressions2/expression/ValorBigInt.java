@@ -246,13 +246,13 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
     // Remover zeros à esquerda:
     // quotient = [4, 0]
     // remainder = [0]
-    public ValorBigFraction div(ValorBigInt other) {
+    public ValorNumerico div(ValorBigInt other) {
         if (other.toString().equals("0")) {
             throw new ArithmeticException("Divisão por zero não é permitida.");
         }
 
-        if(other.toString().equals("1")) {
-            return new ValorBigFraction(List.of(this.clone(), new ValorBigInt(List.of(1))));
+        if (other.toString().equals("1")) {
+            return this.clone();
         }
 
         if (this.abs().compareTo(other.abs()) < 0) {
@@ -287,9 +287,9 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
         ValorBigInt quotient = new ValorBigInt(quotientDigits, isQuotientNegative);
 
         if (remainder.isEmpty() || (remainder.size() == 1 && remainder.get(0) == 0)) {
-            return new ValorBigFraction(List.of(quotient, new ValorBigInt(List.of(1))));
+            return quotient;
         } else {
-            return new ValorBigFraction(List.of(this.clone(), other.clone()));
+            return new ValorBigFraction(List.of(this.clone(), other.clone())).simplify();
         }
     }
 
@@ -392,18 +392,43 @@ public class ValorBigInt extends ValorNumerico<List<Integer>> {
         int shift = 0;
 
         while (x.isEven() && y.isEven()) {
-            x = x.div(new ValorBigInt(List.of(2))).valor().get(0);
-            y = y.div(new ValorBigInt(List.of(2))).valor().get(0);
+            ValorNumerico xDivided = x.div(new ValorBigInt(List.of(2)));
+            ValorNumerico yDivided = y.div(new ValorBigInt(List.of(2)));
+
+            if (xDivided instanceof ValorBigInt) {
+                x = (ValorBigInt) xDivided;
+            } else if (xDivided instanceof ValorBigFraction) {
+                x = ((ValorBigFraction) xDivided).valor().get(0);
+            }
+
+            if (yDivided instanceof ValorBigInt) {
+                y = (ValorBigInt) yDivided;
+            } else if (yDivided instanceof ValorBigFraction) {
+                y = ((ValorBigFraction) yDivided).valor().get(0);
+            }
+
             shift++;
         }
 
         while (x.isEven()) {
-            x = x.div(new ValorBigInt(List.of(2))).valor().get(0);
+            ValorNumerico xDivided = x.div(new ValorBigInt(List.of(2)));
+
+            if (xDivided instanceof ValorBigInt) {
+                x = (ValorBigInt) xDivided;
+            } else if (xDivided instanceof ValorBigFraction) {
+                x = ((ValorBigFraction) xDivided).valor().get(0);
+            }
         }
 
         while (!y.toString().equals("0")) {
             while (y.isEven()) {
-                y = y.div(new ValorBigInt(List.of(2))).valor().get(0);
+                ValorNumerico yDivided = y.div(new ValorBigInt(List.of(2)));
+
+                if (yDivided instanceof ValorBigInt) {
+                    y = (ValorBigInt) yDivided;
+                } else if (yDivided instanceof ValorBigFraction) {
+                    y = ((ValorBigFraction) yDivided).valor().get(0);
+                }
             }
 
             if (x.compareTo(y) > 0) {
